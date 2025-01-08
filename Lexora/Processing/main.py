@@ -36,7 +36,7 @@ def process_files(paths):
         arr.append([text , path])
     return arr
 
-def main():
+def main(root_folder):
     paths = read_files(root_folder)
     processed_files = process_files(paths)
     return processed_files
