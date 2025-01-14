@@ -3,7 +3,6 @@ import librosa
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 from transformers import AutoFeatureExtractor, AutoModelForAudioClassification
 
-
 class Audio:
     def __init__(self):
         self.transcript_model = AutoModelForSpeechSeq2Seq.from_pretrained("openai/whisper-small")
@@ -11,6 +10,7 @@ class Audio:
         self.caption_model = AutoModelForAudioClassification.from_pretrained("MIT/ast-finetuned-audioset-10-10-0.4593")
         self.caption_extractor = AutoFeatureExtractor.from_pretrained("MIT/ast-finetuned-audioset-10-10-0.4593")
         
+
     def Audio_transcript(self,path, chunk_length=30):
         audio, sampling_rate = librosa.load(path, sr=16000)
         chunk_size = chunk_length * sampling_rate
@@ -37,4 +37,4 @@ class Audio:
         caption = self.Audio_captioning(path)
         return f'It is a {caption}. {transcript}'
 # Example
-#print(process_audio(r'D:/Hilti_Hackathon/Hilti_Hackathon/Target_Folder/Target_Folder/Additional_Files/Audio/Jfk_berlin_address_high.ogg.mp3'))
+# print(process_audio(r'D:/Hilti_Hackathon/Hilti_Hackathon/Target_Folder/Target_Folder/Additional_Files/Audio/Jfk_berlin_address_high.ogg.mp3'))

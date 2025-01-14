@@ -2,10 +2,13 @@ import faiss
 import numpy as np
 import pickle
 import re
+import os
+
 
 class VectorDB:
     def __init__(self):
-        pass
+        self.base_path = os.path.join(os.getcwd(), "Database")
+
     def match_pattern(self, path):
         pattern = r".*[\\/](\w+)[\\/](.+)$"
         match = re.search(pattern, path)
@@ -15,26 +18,33 @@ class VectorDB:
         else:
             modified_path = path
         return modified_path
-    def keywords_db(self,ranked_set, path):
+
+    def keywords_db(self, ranked_set, path):
         embeddings = [ranked_set[i][0] for i in range(len(ranked_set))]
-        metadata = [[ranked_set[i][1],ranked_set[i][2],path] for i in range(len(ranked_set))]
+        metadata = [[ranked_set[i][1], ranked_set[i][2], path] for i in range(len(ranked_set))]
         embedding_matrix = np.array(embeddings, dtype="float32")
         dimension = embedding_matrix.shape[1]
         index = faiss.IndexFlatL2(dimension)
         index.add(embedding_matrix)
-        faiss.write_index(index, f'D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords\Keyword_index_{self.match_pattern(path)}.faiss')
-        with open(f'D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords\metadata_{self.match_pattern(path)}.pkl', "wb") as f:
+
+        # Save index and metadata
+        keyword_dir = os.path.join(self.base_path, "Keywords")
+        os.makedirs(keyword_dir, exist_ok=True)
+        modified_path = self.match_pattern(path)
+        faiss.write_index(index, os.path.join(keyword_dir, f"Keyword_index_{modified_path}.faiss"))
+        with open(os.path.join(keyword_dir, f"metadata_{modified_path}.pkl"), "wb") as f:
             pickle.dump(metadata, f)
-        return
-    def embeddings_db(self,embeddings, path):
+
+    def embeddings_db(self, embeddings, path):
         d = embeddings.shape[1]
         index = faiss.IndexFlatL2(d)
         index.add(embeddings)
-        faiss.write_index(index, f'D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Embeddings\Embedding_index_{self.match_pattern(path)}.faiss')
+
+        # Save index and metadata
+        embedding_dir = os.path.join(self.base_path, "Embeddings")
+        os.makedirs(embedding_dir, exist_ok=True)
+        modified_path = self.match_pattern(path)
+        faiss.write_index(index, os.path.join(embedding_dir, f"Embedding_index_{modified_path}.faiss"))
         metadata = [path]
-        with open(f'D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Embeddings\metadata_{self.match_pattern(path)}.pkl', "wb") as f:
-            pickle.dump(metadata, f)   
-        return
-        
-        
-    
+        with open(os.path.join(embedding_dir, f"metadata_{modified_path}.pkl"), "wb") as f:
+            pickle.dump(metadata, f)
