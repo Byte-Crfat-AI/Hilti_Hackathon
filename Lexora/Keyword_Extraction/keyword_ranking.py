@@ -6,8 +6,8 @@ import torch
 
 class Keyword:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-        self.model = AutoModel.from_pretrained("bert-base-uncased")
+        self.tokenizer = AutoTokenizer.from_pretrained("google-bert/bert-base-uncased")
+        self.model = AutoModel.from_pretrained("google-bert/bert-base-uncased")
         self.kw_model = KeyBERT(model=self.model)
 
     def get_keywords(self, text):

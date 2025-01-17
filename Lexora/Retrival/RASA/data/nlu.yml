@@ -1,0 +1,168 @@
+version: "3.1"
+
+nlu:
+- intent: retrieve file
+  examples: |
+    - Can you get me the file with the keyword 'project timeline'?
+    - I need the document containing the phrase 'financial summary'.
+    - Retrieve the file mentioning 'market analysis' in its content.
+    - Find the file that has 'technical specifications' in it.
+    - Get the document with 'sales report' mentioned in the text.
+    - Fetch the file containing 'budget forecast' details.
+    - Locate the file where 'meeting notes' are included.
+    - I need the file that talks about 'client feedback'.
+    - Provide the file mentioning 'employee records' inside.
+    - Can you give me the file with the text 'annual performance review'?
+    - Lexora, please fetch the document containing the budget details for Q3.
+    - Can you retrieve the file with the sales analysis for last month?
+    - Get me the file that has the 2022 annual report.
+    - I need the file with the employee attendance for December.
+    - Fetch the project plan document for the new product launch.
+    - Retrieve the presentation on market trends from last quarter.
+    - Bring the file that includes the customer feedback survey results.
+    - Can you get the file containing the detailed profit-loss statement?
+    - I need access to the file with the marketing strategies for 2023.
+    - Please fetch the report with the supply chain metrics.
+    - Can you provide the file containing 'sales report'?
+    - I need the document where 'annual growth' is mentioned.
+    - Fetch the file with the keyword 'project timeline'.
+    - Retrieve the file that includes 'budget details'.
+    - Get me the file that talks about 'quarterly revenue'.
+    - Can you send me the document with 'marketing strategy'?
+    - Locate the file containing 'employee handbook'.
+    - Find the file discussing 'company policy'.
+    - I need access to the document that has 'contract terms'.
+    - Get the file that includes 'client list'.
+    - Get me the file containing the keyword 'annual report'.
+    - Find the document with the keyword 'project summary'.
+    - Retrieve the file mentioning 'financial statement'.
+    - Provide the file that talks about 'market analysis'.
+    - I need the document discussing 'employee benefits'.
+    - Get the file containing the keyword 'product roadmap'.
+    - Locate the file with 'investment strategy' mentioned.
+    - Retrieve the document with 'quarterly performance'.
+    - Fetch the file that includes 'sales forecast'.
+    - Give me the file mentioning 'customer feedback'.
+    - Can Lexora give me the file containing the 2020 sales report?
+    - I need the complete document on Q3 financial analysis from Lexora.
+    - Please provide the entire file with the latest marketing strategy.
+    - Get me the file on the recent employee survey results.
+    - Could Lexora fetch the full document of the annual budget report?
+    - I want the full PDF of the project plan for the new product launch.
+    - Lexora, give me the complete file on customer feedback from last year.
+    - Retrieve the file on the partnership agreement signed in 2021.
+    - I need the whole document regarding the new hiring policies.
+    - Please get me the entire file on the companyâ€™s sustainability report.
+    - Can you fetch the file containing the project details?
+    - I need the report on the latest sales figures.
+    - Retrieve the document with the contract agreement.
+    - Please get me the file with the meeting notes.
+    - Can you find the file that has the marketing plan?
+    - I need access to the file containing the annual budget.
+    - Fetch the document with the employee handbook.
+    - Retrieve the file with the financial statement.
+    - Please get the file with the product specifications.
+    - Can you provide the file that includes the user manual?
+    - Can you fetch the full document containing the project report?
+    - Give me the complete file with the sales data.
+    - I need the entire file with the Q4 financials.
+    - Please retrieve the file with the meeting notes from last week.
+    - Download the full report on customer feedback.
+    - Can you provide the full text of the marketing strategy document?
+    - Fetch the entire research paper on climate change trends.
+    - Retrieve the full document containing the annual review.
+    - I need the complete file with the software development guidelines.
+    - Please get the entire file on the team roster and assignments.
+    - Can you fetch the document about Q1 revenue report?
+    - Get me the file that contains the details about employee contracts.
+    - Retrieve the file where marketing strategies are stored.
+    - I need the document that includes the term 'supply chain'.
+    - Locate and send me the file with product specifications.
+    - Fetch the document mentioning 'legal compliance'.
+    - Bring me the file that talks about 'budget allocation'.
+    - Provide the file containing 'customer feedback forms'.
+    - Give me the document that discusses 'team meeting minutes'.
+    - I need the file with the keyword 'project deadlines'.
+
+- intent: answer query using content
+  examples: |
+    - What are the key points mentioned in the file about 'project timeline'?
+    - Can you summarize the details related to 'financial summary' from the file?
+    - What does the document say about 'market analysis'?
+    - Explain the content of the file mentioning 'technical specifications'.
+    - Can you provide insights from the file that contains 'sales report'?
+    - What details about 'budget forecast' are mentioned in the file?
+    - Summarize the points about 'meeting notes' from the document.
+    - Can you answer based on the file content about 'client feedback'?
+    - Give me a summary of 'employee records' mentioned in the file.
+    - Explain the 'annual performance review' details from the file.
+    - What were the total sales for Q3 mentioned in the file?
+    - Can Lexora tell me the key points from the annual report?
+    - What does the file say about the customer satisfaction scores?
+    - Can you provide the top 3 highlights from the market trends file?
+    - What are the project deadlines mentioned in the document?
+    - Tell me the overall profit margin from the profit-loss statement.
+    - What strategies does the marketing file suggest for next year?
+    - Summarize the key issues from the supply chain metrics report.
+    - Can you extract the attendance percentage from the employee report?
+    - What is the budget allocation for Q4 as per the document?
+    - What's the total revenue according to 'financial summary'?
+    - Who is responsible for 'product launch' as per the document?
+    - Can you tell me the meaning of 'SLA' from the file?
+    - What is the conclusion of the 'business analysis' document?
+    - Summarize the 'training program' from the file.
+    - According to the file, what does 'sales forecast' predict?
+    - What are the action items mentioned in 'team meeting' notes?
+    - Explain the procedure described in 'installation guide'.
+    - What are the key points under 'strategic objectives'?
+    - Can you provide details about 'expense breakdown'?
+    - What is the total revenue mentioned in the file containing 'annual report'?
+    - What does the document say about 'employee benefits'?
+    - Summarize the content about 'investment strategy' in the file.
+    - What is the market size mentioned in the document discussing 'market analysis'?
+    - What are the key points in the file containing 'financial statement'?
+    - What is the forecast for sales in the document with 'sales forecast'?
+    - Can you extract details about 'product roadmap' from the file?
+    - What is the feedback trend discussed in the document mentioning 'customer feedback'?
+    - Summarize the 'quarterly performance' discussed in the file.
+    - What are the highlights of the file with 'project summary'?
+    - What are the key findings in the 2020 sales report according to Lexora?
+    - Can Lexora summarize the Q3 financial analysis for me?
+    - What does the latest marketing strategy document say about social media?
+    - According to Lexora, what were the results of the recent employee survey?
+    - What are the main points from the annual budget report as per Lexora?
+    - Lexora, can you tell me the milestones in the project plan for the new product launch?
+    - What does the customer feedback from last year indicate, according to Lexora?
+    - Can Lexora explain the main terms of the partnership agreement signed in 2021?
+    - What are the new hiring policies mentioned in the document Lexora has?
+    - Can Lexora give insights from the company’s sustainability report?
+    - What are the main points from the meeting notes?
+    - Can you summarize the project details from the file?
+    - What does the latest sales report say about revenue?
+    - Find the key points in the contract agreement.
+    - What strategies are outlined in the marketing plan?
+    - Can you tell me the annual budget from the document?
+    - Summarize the main sections of the employee handbook.
+    - What are the financial highlights in the statement?
+    - What are the product specifications mentioned in the file?
+    - Explain the key instructions in the user manual.
+    - What are the main conclusions in the project report?
+    - Can you tell me the total sales figure from the sales data file?
+    - What does the Q4 financials document say about net profit?
+    - Summarize the key points from the meeting notes of last week.
+    - What customer feedback trends are highlighted in the report?
+    - Can you explain the main points of the marketing strategy?
+    - What are the key findings in the research paper on climate change trends?
+    - Summarize the annual review's insights on employee performance.
+    - What are the crucial guidelines mentioned in the software development document?
+    - Can you list the team members and their roles from the roster file?
+    - What are the main points mentioned in the Q1 revenue report?
+    - Can you tell me the details about employee contracts from the file?
+    - What are the marketing strategies mentioned in the document?
+    - What does the file say about 'supply chain'?
+    - Can you summarize the product specifications from the file?
+    - What are the key points regarding 'legal compliance' in the document?
+    - Can you extract the details about 'budget allocation' from the file?
+    - What customer feedback is mentioned in the forms?
+    - Summarize the 'team meeting minutes' from the file.
+    - What does the document say about 'project deadlines'?

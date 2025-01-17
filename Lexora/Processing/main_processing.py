@@ -1,8 +1,8 @@
 import os
-from Text import PDF
-from Images import Image
-from Audio import Audio
-from CSV import CSV
+from Processing.Text import PDF
+from Processing.Images import Image
+from Processing.Audio import Audio
+from Processing.CSV import CSV
 # Lexora is compatible with four file extensions .pdf, .jpg , .jpeg, .png , .mp3, .csv
 
 class MainProcessing:
