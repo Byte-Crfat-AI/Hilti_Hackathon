@@ -4,8 +4,8 @@ import torch
 
 class Embeddings:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-        self.model = AutoModel.from_pretrained("bert-base-uncased")
+        self.tokenizer = AutoTokenizer.from_pretrained("google-bert/bert-base-uncased")
+        self.model = AutoModel.from_pretrained("google-bert/bert-base-uncased")
 
     def chunk_text(self, text, max_length=512, overlap=100):
         tokens = self.tokenizer.encode(text, add_special_tokens=False)
