@@ -1,8 +1,8 @@
 import torch  # Import torch at the beginning
-from main_keyword_extraction import MainKeywordExtraction
-from embeddings import Embeddings
-from keyword_ranking import Keyword
-from vectordb import VectorDB
+from Keyword_Extraction.main_keyword_extraction import MainKeywordExtraction
+from Keyword_Extraction.embeddings import Embeddings
+from Keyword_Extraction.keyword_ranking import Keyword
+from Keyword_Extraction.vectordb import VectorDB
 
 def embeddings():
     print("=== Generating Text Embeddings ===")
