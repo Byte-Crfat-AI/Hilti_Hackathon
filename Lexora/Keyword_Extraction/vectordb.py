@@ -8,7 +8,6 @@ import os
 class VectorDB:
     def __init__(self):
         self.base_path = os.path.join(os.getcwd(), "Database")
-
     def match_pattern(self, path):
         pattern = r".*[\\/](\w+)[\\/](.+)$"
         match = re.search(pattern, path)

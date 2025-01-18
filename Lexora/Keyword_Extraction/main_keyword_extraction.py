@@ -1,6 +1,6 @@
-from Keyword_Extraction.vectordb import VectorDB
-from Keyword_Extraction.embeddings import Embeddings
-from Keyword_Extraction.keyword_ranking import Keyword
+from vectordb import VectorDB
+from embeddings import Embeddings
+from keyword_ranking import Keyword
 
 
 class MainKeywordExtraction:

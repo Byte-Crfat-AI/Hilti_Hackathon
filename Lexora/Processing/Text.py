@@ -2,7 +2,7 @@ from pypdf import PdfReader
 import pdfplumber
 from PIL import Image
 from io import BytesIO
-from Processing.Images import Image as Image_Class
+from Images import Image as Image_Class
 
 class PDF:
     def __init__(self):
