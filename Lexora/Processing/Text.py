@@ -2,12 +2,13 @@ from pypdf import PdfReader
 import pdfplumber
 from PIL import Image
 from io import BytesIO
-from Images import Image as Image_Class
+from Images import Image as Image_Processor
+import fitz
 
 class PDF:
     def __init__(self):
-        self.Image_class = Image_Class()
-    def ordinal(n):
+        self.Image_class = Image_Processor()
+    def ordinal(self,n):
         if 11 <= n % 100 <= 13:
             suffix = 'th'
         else:
@@ -36,5 +37,6 @@ class PDF:
 
 # Example usage
 # pdf_path = r'D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder\Target_Folder\Metal Matrix\A novel look at the metal matrix used in diamond impregnated tools for cutting stones.pdf'
-# extracted_text = PDF.process_pdf(pdf_path)
+# text = PDF()
+# extracted_text = text.process_pdf(pdf_path)
 # print(extracted_text)

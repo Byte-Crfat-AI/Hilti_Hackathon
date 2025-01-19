@@ -24,4 +24,4 @@ class Embeddings:
                 outputs = self.model(**inputs)
             token_embeddings = outputs.last_hidden_state
             embeddings.append(token_embeddings.squeeze(0))
-        return torch.cat(embeddings, dim=0).cpu().numpy()
+        return torch.cat(embeddings, dim=0).cpu().numpy(), chunks
