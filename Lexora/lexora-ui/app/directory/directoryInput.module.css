@@ -1,0 +1,117 @@
+:root {
+  --primary: #1d4ed8; /* Bright blue for buttons, links */
+  --primary-hover: #1e40af; /* Darker blue for hover states */
+  --background: #18181b; /* Deep dark background */
+  --foreground: #e4e4e7; /* Light text color */
+  --bot-bg: #27272a; /* Darker gray for bot messages */
+  --user-bg: #3f3f46; /* Slightly lighter gray for user messages */
+  --input-bg: #1f1f23; /* Input field background */
+  --input-border: #3f3f46; /* Subtle border for inputs */
+  --input-border-focus: #4f46e5; /* Bright blue for focused input fields */
+  --gray: #a1a1aa; /* Desaturated gray for less prominent text */
+}
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background);
+  padding: 16px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  width: 100%;
+  background-color: var(--input-bg);
+  border-radius: 12px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+}
+
+.description {
+  font-size: 1rem;
+  color: var(--gray);
+  margin: 0 0 8px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--foreground);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.5);
+}
+
+.setPath {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+}
+
+.pathLabel {
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.path {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.button,
+.processButton {
+  margin-top: 16px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover,
+.processButton:hover {
+  background-color: var(--primary-hover);
+}
+
+.statusMessage {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: var(--gray);
+}
