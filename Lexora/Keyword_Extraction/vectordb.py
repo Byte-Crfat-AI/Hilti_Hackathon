@@ -36,6 +36,6 @@ class VectorDB:
         os.makedirs(embedding_dir, exist_ok=True)
         modified_path = self.match_pattern(path)
         faiss.write_index(index, os.path.join(embedding_dir, f"Embedding_index_{modified_path}.faiss"))
-        metadata = [[path]*len(chunks), chunks]
+        metadata = chunks
         with open(os.path.join(embedding_dir, f"metadata_{modified_path}.pkl"), "wb") as f:
             pickle.dump(metadata, f)

@@ -22,6 +22,6 @@ class Embeddings:
             inputs = self.tokenizer(chunk, padding=True, truncation=True, return_tensors="pt")
             with torch.no_grad():
                 outputs = self.model(**inputs)
-            token_embeddings = outputs.last_hidden_state
-            embeddings.append(token_embeddings.squeeze(0))
-        return torch.cat(embeddings, dim=0).cpu().numpy(), chunks
+            cls_embedding = outputs.last_hidden_state[:, 0, :]  # CLS token embedding
+            embeddings.append(cls_embedding.squeeze(0))
+        return torch.stack(embeddings).cpu().numpy(), chunks
