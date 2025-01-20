@@ -4,32 +4,53 @@ import { useState } from "react";
 import styles from "./directoryInput.module.css";
 
 export default function DirectoryInput({ onPathSubmit }) {
-  const [directory, setDirectory] = useState(""); // User input for the directory path
-  const [rootFolder, setRootFolder] = useState(null); // Tracks the set folder path
-  const [statusMessage, setStatusMessage] = useState(""); // Status messages for the user
+  const [directory, setDirectory] = useState("");
+  const [rootFolder, setRootFolder] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSetFolder = (e) => {
+  const handleSetFolder = async (e) => {
     e.preventDefault();
-    if (directory.trim()) {
-      setRootFolder(directory.trim()); // Set the folder path and lock the input
+    const path = directory.trim();
+    
+    if (path) {
+      try {
+        setIsProcessing(true);
+        setStatusMessage("Validating directory...");
+        
+        //directory validation logic
+        setRootFolder(path);
+        setStatusMessage("");
+      } catch (error) {
+        setStatusMessage("Error validating directory: " + error.message);
+      } finally {
+        setIsProcessing(false);
+      }
     }
   };
 
   const handleProcessFiles = () => {
     if (rootFolder) {
-      onPathSubmit(rootFolder); // Pass the folder path to the parent component
+      setStatusMessage("Initiating file processing...");
+      onPathSubmit(rootFolder);
     }
+  };
+
+  const handleReset = () => {
+    setRootFolder(null);
+    setDirectory("");
+    setStatusMessage("");
   };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSetFolder}>
-        <h1 className={styles.title}>Enter a Directory Path</h1>
+        <h1 className={styles.title}>Document Processing System</h1>
         <p className={styles.description}>
-          Please provide the directory path you want to access.
+          Enter the directory path containing your documents for processing.
         </p>
+        
         <div className={styles.inputGroup}>
-          {/* If the folder is not set, show the input field; otherwise, display the set path */}
           {!rootFolder ? (
             <>
               <input
@@ -37,29 +58,50 @@ export default function DirectoryInput({ onPathSubmit }) {
                 value={directory}
                 onChange={(e) => setDirectory(e.target.value)}
                 className={styles.input}
-                placeholder="/path/to/directory"
+                placeholder="/path/to/documents"
                 required
+                disabled={isProcessing}
               />
-              <button type="submit" className={styles.button}>
-                Set Folder
+              <button 
+                type="submit" 
+                className={styles.button}
+                disabled={isProcessing}
+              >
+                {isProcessing ? "Validating..." : "Set Folder"}
               </button>
             </>
           ) : (
             <div className={styles.setPath}>
-              <span className={styles.pathLabel}>Set Folder Path:</span>
+              <span className={styles.pathLabel}>Selected Directory:</span>
               <span className={styles.path}>{rootFolder}</span>
-              <button
-                type="button"
-                onClick={handleProcessFiles}
-                className={styles.processButton}
-              >
-                Process Files
-              </button>
+              <div className={styles.buttonGroup}>
+                <button
+                  type="button"
+                  onClick={handleProcessFiles}
+                  className={styles.processButton}
+                  disabled={isProcessing}
+                >
+                  Process Files
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className={styles.resetButton}
+                  disabled={isProcessing}
+                >
+                  Reset
+                </button>
+              </div>
             </div>
           )}
         </div>
       </form>
-      {statusMessage && <p className={styles.statusMessage}>{statusMessage}</p>}
+      
+      {statusMessage && (
+        <p className={`${styles.statusMessage} ${isProcessing ? styles.processing : ''}`}>
+          {statusMessage}
+        </p>
+      )}
     </div>
   );
 }
