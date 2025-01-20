@@ -49,22 +49,22 @@ class RAGSystem:
         response = await self.get_response(text_chunks,query)
         return response
 
-import asyncio
+# import asyncio
 
-async def main():
-    rag=RAGSystem()
-    response = await rag.respond(
-        'Describe the fourth finger on the left hand',
-        [
-            'Lexora/Database/Embeddings/Embedding_index_to_file1.faiss',
-            'Lexora/Database/Embeddings/Embedding_index_to_file2.faiss'
-        ],
-        [
-            'Lexora/Database/Embeddings/metadata_to_file1.pkl',
-            'Lexora/Database/Embeddings/metadata_to_file2.pkl'
-        ]
-    )
-    print(response)
+# async def main():
+#     rag=RAGSystem()
+#     response = await rag.respond(
+#         'Describe the fourth finger on the left hand',
+#         [
+#             'Lexora/Database/Embeddings/Embedding_index_to_file1.faiss',
+#             'Lexora/Database/Embeddings/Embedding_index_to_file2.faiss'
+#         ],
+#         [
+#             'Lexora/Database/Embeddings/metadata_to_file1.pkl',
+#             'Lexora/Database/Embeddings/metadata_to_file2.pkl'
+#         ]
+#     )
+#     return response
 
-# Run the async function
-asyncio.run(main())
+# # Run the async function
+# print(asyncio.run(main()))
