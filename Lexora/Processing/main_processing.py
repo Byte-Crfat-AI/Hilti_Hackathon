@@ -1,13 +1,12 @@
 import os
-from Processing.Text import PDF
-from Processing.Images import Image
-from Processing.Audio import Audio
-from Processing.CSV import CSV
+from Text import PDF
+from Images import Image
+from Audio import Audio
+from CSV import CSV
 # Lexora is compatible with four file extensions .pdf, .jpg , .jpeg, .png , .mp3, .csv
 
 class MainProcessing:
     def __init__(self):
-        self.root_folder =  'D:/Hilti_Hackathon/Hilti_Hackathon/Target_Folder/Target_Folder'
         self.PDF = PDF()
         self.Image = Image()
         self.Audio = Audio()
@@ -45,12 +44,4 @@ class MainProcessing:
     def main_processing(self, root_folder):
         paths = self.read_files(root_folder)
         processed_files = self.process_files(paths)
-        return processed_files
-
-    # this function will be called whenver a user creates a new file 
-    def main_processing_new(self,root_folder):
-        paths = self.read_files(root_folder)
-        # check for the paths that are already processed and stored in the database and remove those paths from the paths list
-        new_paths = paths # yet to be completed
-        processed_files = self.process_files(new_paths)
         return processed_files
