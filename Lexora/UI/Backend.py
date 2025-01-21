@@ -23,5 +23,5 @@ class main:
     
 # Example
 Main = main()
-#Main.setup("D:\Hilti_storage")
+Main.setup("D:\Hilti_storage")
 print(Main.query("Get me the file with Owl"))
