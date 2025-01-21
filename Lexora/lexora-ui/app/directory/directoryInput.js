@@ -18,7 +18,7 @@ export default function DirectoryInput({ onPathSubmit }) {
         setIsProcessing(true);
         setStatusMessage("Validating directory...");
         
-        //directory validation logic
+        // Directory validation logic
         setRootFolder(path);
         setStatusMessage("");
       } catch (error) {
