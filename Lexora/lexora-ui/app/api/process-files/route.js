@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 import { NextResponse } from 'next/server';
 
 // Correct path to the Python script
-const PROCESSING_SCRIPT = '/home/dev303/Documents/Hilti_Hackathon/Lexora/main/Backend.py';
+const PROCESSING_SCRIPT = '/home/dev303/Documents/Hilti_Hackathon/Lexora/lexora-ui/public/Backend.py';
 let rootFolderCache = null; // Cache the processed folder path globally
 
 export async function POST(request) {

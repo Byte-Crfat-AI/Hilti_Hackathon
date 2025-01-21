@@ -1,7 +1,7 @@
 import sys
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Processing')
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Keyword_Extraction')
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Retrival')
+sys.path.append('/home/dev303/Documents/Hilti_Hackathon/Lexora/Processing')
+sys.path.append('/home/dev303/Documents/Hilti_Hackathon/Lexora/Keyword_Extraction')
+sys.path.append('/home/dev303/Documents/Hilti_Hackathon/Lexora/Retrival')
 from main_processing import MainProcessing
 from main_keyword_extraction import MainKeywordExtraction
 from main_retrieval import MainRetrieval
