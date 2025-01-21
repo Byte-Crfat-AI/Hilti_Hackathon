@@ -13,13 +13,15 @@ class RAGSystem:
 
         # Configure Gemini
         genai.configure(api_key=google_api_key)
-        self.model = genai.GenerativeModel('gemini-pro')
-
+        self.model = genai.GenerativeModel('gemini-1.5-pro')
+        self.searcher = FaissSearcher()
 
     def generate_prompt(self, query, relevant_chunks):
 
         context = "\n\n".join(relevant_chunks)
-        prompt = f"""Please answer the following question based on the provided context. 
+        prompt = f"""
+        You're Lexora, an AI based database management system.
+        Please answer the following question based on the provided context. 
         If the answer cannot be found in the context, please say so.
 
         Context:
@@ -41,10 +43,7 @@ class RAGSystem:
 
     # Example usage
     async def respond(self,query,faiss_files,chunks_files):
-
-        searcher=FaissSearcher()
-        text_chunks=searcher.return_chunks(query,faiss_files,chunks_files)
-        
+        text_chunks=self.searcher.return_chunks(query,faiss_files,chunks_files)
         # Get response
         response = await self.get_response(text_chunks,query)
         return response

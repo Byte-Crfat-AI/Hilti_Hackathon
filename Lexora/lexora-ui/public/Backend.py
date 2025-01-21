@@ -1,11 +1,21 @@
+import os
+import re
+def get_parent_folder_path(path):
+    match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+    if match:
+        return match.group(1)
+    return None
 import sys
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Processing')
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Keyword_Extraction')
-sys.path.append('/workspace/Hilti_Hackathon/Lexora/Retrival')
+Lexora_path = get_parent_folder_path(get_parent_folder_path(os.getcwd()))
+keyword_extraction_path = os.path.join(Lexora_path , "Keyword_Extraction")
+Processing_path = os.path.join(Lexora_path , "Processing")
+Retrival_path = os.path.join(Lexora_path , "Retrival")
+sys.path.append(keyword_extraction_path)
+sys.path.append(Processing_path)
+sys.path.append(Retrival_path)
 from main_processing import MainProcessing
 from main_keyword_extraction import MainKeywordExtraction
 from main_retrieval import MainRetrieval
-from Gemini import RAGSystem
 import asyncio
 
 class main:
@@ -13,7 +23,6 @@ class main:
         self.processing = MainProcessing()
         self.keyword_extraction = MainKeywordExtraction()
         self.retrieval = MainRetrieval()
-        self.rag=RAGSystem()
 
     def setup(self, root_folder):
         processed_files = self.processing.main_processing(root_folder)
@@ -23,16 +32,10 @@ class main:
     def query(self, query):
         return self.retrieval.main_retrieval(query)
 
-    def gemini(self,query,faiss_files,chunks_files):
-        response = asyncio.run(self.rag.respond(query,faiss_files,chunks_files))
-        return response
-
     
     
 # Example
 Main = main()
-Main.setup("D:\Hilti_storage")
+root_folder = "D:\Hilti_storage"
+Main.setup(root_folder)
 print(Main.query("Get me the file with Owl"))
-# Main.setup("D:\Hilti_storage")
-print(Main.query("Get me the file with Owl"))
-print(Main.gemini())

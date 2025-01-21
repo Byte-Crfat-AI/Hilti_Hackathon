@@ -1,9 +1,18 @@
 from Decision import get_intent
-import sys
-sys.path.append("D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Keyword_Extraction")
-from keyword_ranking import Keyword
 import os
+import re
+def get_parent_folder_path(path):
+    match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+    if match:
+        return match.group(1)
+    return None
+keyword_extraction_dir = os.path.join(get_parent_folder_path(os.getcwd()), "Keyword_Extraction")
+database_dir = os.path.join(get_parent_folder_path(os.getcwd()), "Database" , "Keywords")
+import sys
+sys.path.append(keyword_extraction_dir)
+from keyword_ranking import Keyword
 import faiss
+from Gemini  import RAGSystem
 import numpy as np
 import pickle
 from tqdm import tqdm
@@ -11,17 +20,18 @@ from tqdm import tqdm
 class MainRetrieval:
     def __init__(self):
         self.keyword = Keyword()
+        self.RAG = RAGSystem()
     def main_retrieval(self, query):
         intent = get_intent(query)
         ranked_set = self.keyword.keyword_main(query)
-        keyword_faiss = os.listdir(r"D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords")
+        keyword_faiss = os.listdir(database_dir)
         keyword_faiss = [keyword_faiss[i] for i in range(len(keyword_faiss)) if keyword_faiss[i][-6:] == ".index"]
         keyword_metadata = [f'metadata_{keyword_faiss[i][14:-6]}.pkl' for i in range(len(keyword_faiss))]
         files = {}
         for i in tqdm(range(len(ranked_set))):
             for j in range(len(keyword_faiss)):
-                index_path = os.path.join(r"D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords", keyword_faiss[j])
-                metadata_path = os.path.join(r"D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords", keyword_metadata[j])
+                index_path = os.path.join(database_dir, keyword_faiss[j])
+                metadata_path = os.path.join(database_dir, keyword_metadata[j])
                 index = faiss.read_index(index_path)
                 with open(metadata_path, "rb") as f:
                     metadata = pickle.load(f)
@@ -42,6 +52,7 @@ class MainRetrieval:
         if intent == 'retrieve file':
             return file_paths
         else:
-            # Manish's function, input = (file_paths, query)
-            pass
+            faiss_files = None
+            chunk_files = None
+            return self.RAG.respond(query,faiss_files, chunk_files)
     

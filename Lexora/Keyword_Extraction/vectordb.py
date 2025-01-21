@@ -7,6 +7,12 @@ import os
 class VectorDB:
     def __init__(self):
         self.base_path = os.path.join(os.getcwd(), "Database")
+        def get_parent_folder_path(path):
+            match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+            if match:
+                return match.group(1)
+            return None
+        self.Lexora_path = get_parent_folder_path(os.getcwd())
     def match_pattern(self, path):
         folder_name = os.path.basename(os.path.dirname(path))
         file_name = os.path.splitext(os.path.basename(path))[0]
@@ -19,8 +25,7 @@ class VectorDB:
         dimension = embedding_matrix.shape[1]
         index = faiss.IndexFlatL2(dimension)
         index.add(embedding_matrix)
-        base_dir = os.path.join(os.getcwd(), "Lexora", "Database")
-        keyword_dir = os.path.join(base_dir, "Keywords")
+        keyword_dir = os.path.join(self.Lexora_path,"Database", "Keywords")
         os.makedirs(keyword_dir, exist_ok=True)
         modified_path = self.match_pattern(path)
         faiss.write_index(index, os.path.join(keyword_dir, f"Keyword_index_{modified_path}.faiss"))
@@ -31,8 +36,7 @@ class VectorDB:
         d = embeddings.shape[1]
         index = faiss.IndexFlatL2(d)
         index.add(embeddings)
-        base_dir = os.path.join(os.getcwd(), "Lexora", "Database")
-        embedding_dir = os.path.join(base_dir, "Embeddings")
+        embedding_dir = os.path.join(self.Lexora_path,"Database", "Embeddings")
         os.makedirs(embedding_dir, exist_ok=True)
         modified_path = self.match_pattern(path)
         faiss.write_index(index, os.path.join(embedding_dir, f"Embedding_index_{modified_path}.faiss"))

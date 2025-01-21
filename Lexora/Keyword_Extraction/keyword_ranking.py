@@ -23,5 +23,5 @@ class Keyword:
             outputs = self.model(**inputs)
         token_embeddings = outputs.last_hidden_state
         sentence_embeddings = torch.mean(token_embeddings, dim=1)
-        ranked_set = [[sentence_embeddings[i], rank[i], keywords[i]]y for i in range(len(rank))]
+        ranked_set = [[sentence_embeddings[i], rank[i], keywords[i]] for i in range(len(rank))]
         return ranked_set

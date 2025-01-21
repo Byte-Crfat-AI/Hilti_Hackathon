@@ -7,74 +7,8 @@ from transformers import AutoModel, AutoTokenizer
 from sentence_transformers import CrossEncoder
 import os
 
-<<<<<<< HEAD
-
-class Retriever():
-    def __init__(self):
-        os.environ["TOKENIZERS_PARALLELISM"] = "false"
-        os.environ["GOOGLE_API_KEY"] = "AIzaSyASciVtzGPKxHFbPo344pr0XBo59MYmDno"
-        os.environ["GROQ_API_KEY"] = "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"
-        logging.getLogger("httpx").setLevel(logging.WARNING)
-        genai.configure(api_key="AIzaSyASciVtzGPKxHFbPo344pr0XBo59MYmDno")
-        self.llm = ChatGroq(temperature=0, model_name="llama3-70b-8192")
-
-    def disable_prints(self,func, *args, **kwargs):
-        # Redirect standard output to null
-        original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-        try:
-            result = func(*args, **kwargs)
-        finally:
-            sys.stdout.close()
-            sys.stdout = original_stdout
-        return result
-
-    def hyde_query(self,query):
-        hyde_prompt = (
-            "Given the following query, create a hypothetical answer as if it were correct and complete:\n"
-            f"Query: {query}\n\n"
-            "Hypothetical Answer:"
-        )
-        return self.llm.invoke(hyde_prompt)
-
-
-    def print_response(self,response):
-        print('AI:',end=' ')
-        response_txt = response["result"]
-        for chunk in response_txt.split("\n"):
-            if not chunk:
-                print()
-                continue
-            print("\n".join(textwrap.wrap(chunk, 100, break_long_words=False)))
-
-    def retriever(self,faiss_index):
-        # Initialize FAISS retriever
-        retriever = FAISS(faiss_index).as_retriever(search_kwargs={"k": 10})
-
-        # Set up a FlashRank compressor
-        compressor = FlashRankRerank(model="ms-marco-MiniLM-L-12-v2")
-
-        # Create a compression retriever
-        compression_retriever = ContextualCompressionRetriever(
-            base_compressor=compressor, base_retriever=retriever
-        )
-
-        # Define the prompt template
-        prompt_template = """
-        You are Lexora, a AI powered database manager.
-        Use the following pieces of information to answer the user's question.
-        If you don't know the answer, just say that you don't know, don't try to make up an answer.
-
-        Context: {context}
-        Question: {question}
-
-        Answer the question and provide additional helpful information,
-        based on the pieces of information, if applicable. Be succinct.
-
-        Responses should be properly formatted to be easily read.
-=======
 class FaissSearcher:
-    def __init__(self, model_name = "bert-base-uncased", 
+    def __init__(self, model_name = "google-bert/bert-base-uncased", 
                  reranker_name = "cross-encoder/ms-marco-MiniLM-L-6-v2",
                  device = "cuda" if torch.cuda.is_available() else "cpu"):
         # Initialize encoder model and tokenizer
@@ -160,7 +94,6 @@ class FaissSearcher:
                            f"Please check that your FAISS indices and chunk files correspond correctly.")
     
     def search(self, query, k = 5, rerank_k = 20):
->>>>>>> 2e473f8c6f98103465bcf0fd3a60a365b3c949a3
         """
         Perform similarity search and reranking
         """
@@ -197,23 +130,18 @@ class FaissSearcher:
     def return_chunks(self,query,faiss_files,chunks_files):
 
         # Initialize searcher
-        searcher = FaissSearcher()
         chunks=[]
 
         try:
             # Load indices and chunks
-            searcher.load_faiss_files(faiss_files, chunks_files)
+            self.load_faiss_files(faiss_files, chunks_files)
             
             # Perform search
-            results = searcher.search(query, k=5)
+            results = self.search(query, k=5)
             
             # Print results
             for idx, result in enumerate(results, 1):
                 chunks.append(result['chunk'])
-                # print(f"\nResult {idx}:")
-                # print(f"Chunk: {result['chunk']}")
-                # print(f"FAISS Score: {result['faiss_score']:.4f}")
-                # print(f"Rerank Score: {result['rerank_score']:.4f}")
             return chunks
                 
         except Exception as e:
