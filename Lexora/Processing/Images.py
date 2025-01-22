@@ -3,7 +3,7 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 from io import BytesIO
 
 class Image:
-    def _init_(self):
+    def __init__(self):
         self.processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
         self.model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large")
 
@@ -21,3 +21,7 @@ class Image:
         outputs = self.model.generate(**inputs)
         caption = self.processor.decode(outputs[0], skip_special_tokens=True)
         return caption
+    
+# # Example
+# image = Image()
+# print(image.process_image("D:\Hilti_storage\pexels-juan-felipe-ramirez-312591454-18190023.jpg"))

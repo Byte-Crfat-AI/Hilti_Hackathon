@@ -7,12 +7,12 @@ import os
 class VectorDB:
     def __init__(self):
         self.base_path = os.path.join(os.getcwd(), "Database")
-        def get_parent_folder_path(path):
-            match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+        def get_lexora_path(path):
+            match = re.search(r'^(.*\\Lexora)(?:\\|$)', path)
             if match:
                 return match.group(1)
             return None
-        self.Lexora_path = get_parent_folder_path(os.getcwd())
+        self.Lexora_path = get_lexora_path(os.getcwd())
     def match_pattern(self, path):
         folder_name = os.path.basename(os.path.dirname(path))
         file_name = os.path.splitext(os.path.basename(path))[0]

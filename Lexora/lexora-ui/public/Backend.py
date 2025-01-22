@@ -1,15 +1,15 @@
 import os
 import re
-def get_parent_folder_path(path):
-    match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+def get_lexora_path(path):
+    match = re.search(r'^(.*\\Lexora)(?:\\|$)', path)
     if match:
         return match.group(1)
     return None
-import sys
-Lexora_path = get_parent_folder_path(get_parent_folder_path(os.getcwd()))
+Lexora_path = get_lexora_path(os.getcwd())
 keyword_extraction_path = os.path.join(Lexora_path , "Keyword_Extraction")
 Processing_path = os.path.join(Lexora_path , "Processing")
 Retrival_path = os.path.join(Lexora_path , "Retrival")
+import sys
 sys.path.append(keyword_extraction_path)
 sys.path.append(Processing_path)
 sys.path.append(Retrival_path)
@@ -35,7 +35,7 @@ class main:
     
     
 # Example
-Main = main()
-root_folder = "D:\Hilti_storage"
-Main.setup(root_folder)
-print(Main.query("Get me the file with Owl"))
+# Main = main()
+# root_folder = "D:\Hilti_storage"
+# Main.setup(root_folder)
+# print(Main.query("Name a few pre-alloyed powders used in diamond tool industry."))

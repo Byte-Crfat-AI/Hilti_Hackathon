@@ -1,13 +1,15 @@
 from Decision import get_intent
 import os
 import re
-def get_parent_folder_path(path):
-    match = re.match(r'^(.*?\\[^\\]+)\\[^\\]+$', path)
+def get_lexora_path(path):
+    match = re.search(r'^(.*\\Lexora)(?:\\|$)', path)
     if match:
         return match.group(1)
     return None
-keyword_extraction_dir = os.path.join(get_parent_folder_path(os.getcwd()), "Keyword_Extraction")
-database_dir = os.path.join(get_parent_folder_path(os.getcwd()), "Database" , "Keywords")
+lexora_path = get_lexora_path(os.getcwd())
+keyword_extraction_dir = os.path.join(lexora_path, "Keyword_Extraction")
+database_dir = os.path.join(lexora_path, "Database" , "Keywords")
+embedding_database_dir = os.path.join(lexora_path, "Database" , "Embeddings")
 import sys
 sys.path.append(keyword_extraction_dir)
 from keyword_ranking import Keyword
@@ -16,6 +18,7 @@ from Gemini  import RAGSystem
 import numpy as np
 import pickle
 from tqdm import tqdm
+import asyncio
 
 class MainRetrieval:
     def __init__(self):
@@ -24,9 +27,10 @@ class MainRetrieval:
     def main_retrieval(self, query):
         intent = get_intent(query)
         ranked_set = self.keyword.keyword_main(query)
-        keyword_faiss = os.listdir(database_dir)
-        keyword_faiss = [keyword_faiss[i] for i in range(len(keyword_faiss)) if keyword_faiss[i][-6:] == ".index"]
+        keyword_faiss_temp = os.listdir(database_dir)
+        keyword_faiss = [keyword_faiss_temp[i] for i in range(len(keyword_faiss_temp)) if keyword_faiss_temp[i][-6:] == ".faiss"]
         keyword_metadata = [f'metadata_{keyword_faiss[i][14:-6]}.pkl' for i in range(len(keyword_faiss))]
+        keywords = [ranked_set[i][2] for i in range(len(ranked_set))]
         files = {}
         for i in tqdm(range(len(ranked_set))):
             for j in range(len(keyword_faiss)):
@@ -47,12 +51,19 @@ class MainRetrieval:
                 else:
                     files[file_path] = score
         files = {k: v for k, v in sorted(files.items(), key=lambda item: item[1], reverse=True)}
-        print(files)
         file_paths = list(files.keys())
         if intent == 'retrieve file':
             return file_paths
         else:
-            faiss_files = None
-            chunk_files = None
-            return self.RAG.respond(query,faiss_files, chunk_files)
+            def match_pattern(path):
+                folder_name = os.path.basename(os.path.dirname(path))
+                file_name = os.path.splitext(os.path.basename(path))[0]
+                return f"{folder_name}_{file_name.replace('.', '_')}"
+            faiss_files = []
+            chunk_files = []
+            for i in range(len(file_paths)):
+                modified_path = match_pattern(file_paths[i])
+                faiss_files.append(os.path.join(embedding_database_dir, f"Embedding_index_{modified_path}.faiss"))
+                chunk_files.append(os.path.join(embedding_database_dir, f"metadata_{modified_path}.pkl"))
+            return asyncio.run(self.RAG.respond(query,faiss_files, chunk_files))
     
