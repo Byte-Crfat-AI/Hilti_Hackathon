@@ -1,117 +1,307 @@
 :root {
-  --primary: #1d4ed8; /* Bright blue for buttons, links */
-  --primary-hover: #1e40af; /* Darker blue for hover states */
-  --background: #18181b; /* Deep dark background */
-  --foreground: #e4e4e7; /* Light text color */
-  --bot-bg: #27272a; /* Darker gray for bot messages */
-  --user-bg: #3f3f46; /* Slightly lighter gray for user messages */
-  --input-bg: #1f1f23; /* Input field background */
-  --input-border: #3f3f46; /* Subtle border for inputs */
-  --input-border-focus: #4f46e5; /* Bright blue for focused input fields */
-  --gray: #a1a1aa; /* Desaturated gray for less prominent text */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --secondary-bg: #1e293b;
+  --border-color: #334155;
+  --text-muted: #94a3b8;
+  --success: #10b981;
+  --error: #ef4444;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--background);
   padding: 16px;
-  text-align: center;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 550px;
+  background-color: var(--secondary-bg);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: var(--transition);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 480px;
-  width: 100%;
-  background-color: var(--input-bg);
-  border-radius: 12px;
-  padding: 32px 24px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 0.3s ease-out;
+  gap: 24px;
+  padding: 32px;
+}
+
+.formHeader {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  color: var(--primary);
+  stroke-width: 1.5;
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--foreground);
+  margin: 0;
 }
 
 .description {
   font-size: 1rem;
-  color: var(--gray);
-  margin: 0 0 8px;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: center;
 }
 
-.inputGroup {
+.inputSection {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .input {
+  flex-grow: 1;
   padding: 12px 16px;
   font-size: 1rem;
-  border: 1px solid var(--input-border);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: var(--input-bg);
+  background-color: var(--background);
   color: var(--foreground);
-  outline: none;
-  transition: border-color 0.3s ease;
+  transition: var(--transition);
 }
 
 .input:focus {
-  border-color: var(--input-border-focus);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.5);
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
-.setPath {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 16px;
-  border: 1px solid var(--input-border);
-  border-radius: 8px;
-  background-color: var(--input-bg);
+.inputError {
+  border-color: var(--error);
 }
 
-.pathLabel {
-  font-size: 0.9rem;
-  color: var(--gray);
+.fileInput {
+  display: none;
 }
 
-.path {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--foreground);
-}
-
-.button,
-.processButton {
-  margin-top: 16px;
-  padding: 12px 16px;
-  font-size: 1rem;
-  font-weight: 600;
+.folderSelectButton {
   background-color: var(--primary);
-  color: white;
+  color: var(--foreground);
   border: none;
   border-radius: 8px;
+  padding: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
 }
 
-.button:hover,
-.processButton:hover {
+.folderSelectButton:hover {
   background-color: var(--primary-hover);
 }
 
-.statusMessage {
-  margin-top: 16px;
+.folderSelectButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin: 8px 0 0;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.button, 
+.processButton, 
+.resetButton {
+  padding: 12px 24px;
   font-size: 1rem;
-  color: var(--gray);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.button {
+  background-color: var(--primary);
+  color: var(--foreground);
+}
+
+.button:hover {
+  background-color: var(--primary-hover);
+}
+
+.selectedPathSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.selectedPathInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.successIcon {
+  color: var(--success);
+  width: 24px;
+  height: 24px;
+}
+
+.pathLabel {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.path {
+  display: block;
+  color: var(--foreground);
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.processButton {
+  background-color: var(--success);
+  color: var(--foreground);
+}
+
+.processButton:hover {
+  background-color: #059669;
+}
+
+.resetButton {
+  background-color: var(--error);
+  color: var(--foreground);
+}
+
+.resetButton:hover {
+  background-color: #dc2626;
+}
+
+.progressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.statusMessageContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: rgba(99, 102, 241, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.statusIcon {
+  color: var(--primary);
+  width: 24px;
+  height: 24px;
+}
+
+.statusMessage {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.historySection {
+  background-color: var(--background);
+  padding: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.historyTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  color: var(--foreground);
+  margin-bottom: 16px;
+}
+
+.historyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historyItem {
+  background-color: var(--secondary-bg);
+  color: var(--text-muted);
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.historyItem:hover {
+  background-color: var(--primary);
+  color: var(--foreground);
 }

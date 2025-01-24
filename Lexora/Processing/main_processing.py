@@ -3,6 +3,7 @@ from Text import PDF
 from Images import Image
 from Audio import Audio
 from CSV import CSV
+import tqdm
 # Lexora is compatible with four file extensions .pdf, .jpg , .jpeg, .png , .mp3, .csv
 
 class MainProcessing:
@@ -22,7 +23,8 @@ class MainProcessing:
 
     def process_files(self, paths):
         arr = []
-        for path in paths:
+        for path in tqdm.tqdm(paths):
+            print(path)
             if path.endswith('.jpg') or path.endswith('.jpeg') or path.endswith('.png'):
                 # Process the image
                 text = self.Image.process_image(path)

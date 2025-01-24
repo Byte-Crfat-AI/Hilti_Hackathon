@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./chatbot.module.css";
 
-export default function Chatbot({ directoryPath }) {
+export default function Chatbot({ directoryPath, onClose }) {
+  const router = useRouter();
   const [isChatOpen, setIsChatOpen] = useState(!!directoryPath);
   const [messages, setMessages] = useState([
-    { role: "bot", content: "Hello! How can I help you with your documents?" }
+    { role: "bot", content: "Hello! How can I help you with your documents?" },
   ]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -21,23 +23,32 @@ export default function Chatbot({ directoryPath }) {
   const processDirectory = async (path) => {
     try {
       setIsProcessing(true);
-      const response = await fetch('/api/process-files', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folderPath: path })
+      const response = await fetch("/api/process-files", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folderPath: path }),
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
-        addMessage("bot", result.cached 
-          ? "Directory already processed. Ready for questions!"
-          : "Directory processed successfully. What would you like to know?");
+        addMessage(
+          "bot",
+          result.cached
+            ? "Directory already processed. Ready for questions!"
+            : "Directory processed successfully. What would you like to know?"
+        );
       } else {
-        addMessage("bot", "Sorry, I had trouble processing the directory. Please try again.");
+        addMessage(
+          "bot",
+          "Sorry, I had trouble processing the directory. Please try again."
+        );
       }
     } catch (error) {
-      addMessage("bot", "Error processing directory. Please check the path and try again.");
+      addMessage(
+        "bot",
+        "Error processing directory. Please check the path and try again."
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -46,18 +57,25 @@ export default function Chatbot({ directoryPath }) {
   const handleQuery = async (query) => {
     try {
       setIsProcessing(true);
-      const response = await fetch('/api/process-files', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+      const response = await fetch("/api/process-files", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
-        addMessage("bot", result.data.response || "I found relevant information but couldn't format it properly.");
+        addMessage(
+          "bot",
+          result.data.response ||
+            "I found relevant information but couldn't format it properly."
+        );
       } else {
-        addMessage("bot", "Sorry, I couldn't process your query. Please try again.");
+        addMessage(
+          "bot",
+          "Sorry, I couldn't process your query. Please try again."
+        );
       }
     } catch (error) {
       addMessage("bot", "Error processing your query. Please try again.");
@@ -67,7 +85,7 @@ export default function Chatbot({ directoryPath }) {
   };
 
   const addMessage = (role, content) => {
-    setMessages(prev => [...prev, { role, content }]);
+    setMessages((prev) => [...prev, { role, content }]);
   };
 
   const handleSend = async () => {
@@ -80,10 +98,15 @@ export default function Chatbot({ directoryPath }) {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleClose = () => {
+    onClose(); // Notify parent to clear directoryPath
+    router.push("/"); // Redirect to directory input page
   };
 
   return (
@@ -91,9 +114,9 @@ export default function Chatbot({ directoryPath }) {
       {isChatOpen ? (
         <div className={styles.container}>
           <header className={styles.header}>
-            <h3>Document Assistant</h3>
-            <button 
-              onClick={() => setIsChatOpen(false)} 
+            <h3>Lexora</h3>
+            <button
+              onClick={handleClose}
               className={styles.closeButton}
               aria-label="Close chat"
             >
@@ -103,8 +126,8 @@ export default function Chatbot({ directoryPath }) {
           <div className={styles.chatbox}>
             <div className={styles.messages}>
               {messages.map((msg, idx) => (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className={`${styles.message} ${styles[msg.role]}`}
                 >
                   {msg.content}
@@ -126,8 +149,8 @@ export default function Chatbot({ directoryPath }) {
                 placeholder="Ask about your documents..."
                 disabled={isProcessing}
               />
-              <button 
-                onClick={handleSend} 
+              <button
+                onClick={handleSend}
                 className={styles.sendButton}
                 disabled={isProcessing}
               >
@@ -137,8 +160,8 @@ export default function Chatbot({ directoryPath }) {
           </div>
         </div>
       ) : (
-        <button 
-          onClick={() => setIsChatOpen(true)} 
+        <button
+          onClick={() => setIsChatOpen(true)}
           className={styles.openButton}
         >
           Open Chat

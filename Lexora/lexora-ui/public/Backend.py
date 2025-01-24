@@ -35,7 +35,7 @@ class main:
     
     
 # Example
-# Main = main()
-# root_folder = "D:\Hilti_storage"
-# Main.setup(root_folder)
+Main = main()
+root_folder = "D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder"
+Main.setup(root_folder)
 # print(Main.query("Name a few pre-alloyed powders used in diamond tool industry."))

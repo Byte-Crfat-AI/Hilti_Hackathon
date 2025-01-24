@@ -5,10 +5,14 @@ import DirectoryInput from "./directory/directoryInput";
 import Chatbot from "./chatbot/chatbot";
 
 export default function Home() {
-  const [directoryPath, setDirectoryPath] = useState(null); // Tracks the folder path for the chatbot
+  const [directoryPath, setDirectoryPath] = useState(null);
 
   const handlePathSubmit = (path) => {
-    setDirectoryPath(path); // Set the directory path and trigger chatbot
+    setDirectoryPath(path); 
+  };
+
+  const handleChatClose = () => {
+    setDirectoryPath(null)
   };
 
   return (
@@ -16,8 +20,9 @@ export default function Home() {
       {!directoryPath ? (
         <DirectoryInput onPathSubmit={handlePathSubmit} />
       ) : (
-        <Chatbot directoryPath={directoryPath} />
+        <Chatbot directoryPath={directoryPath} onClose={handleChatClose} />
       )}
     </div>
   );
 }
+

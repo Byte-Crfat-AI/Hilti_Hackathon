@@ -1,4 +1,4 @@
-from pypdf import PdfReader
+from PyPDF2 import PdfReader
 import pdfplumber
 from PIL import Image
 from io import BytesIO
@@ -26,12 +26,12 @@ class PDF:
             pdf_page = pdf_document.load_page(page_num)
             
             # Extract images from the page
-            image_list = pdf_page.get_images(full=True)
-            for img_index, img in enumerate(image_list):
-                xref = img[0]
-                base_image = pdf_document.extract_image(xref)
-                image_bytes = base_image["image"]
-                text += f'Details about {self.ordinal(img_index+1)} image present in the page {self.Image_class.process_image_bytes(image_bytes)} \n'
+            # image_list = pdf_page.get_images(full=True)
+            # for img_index, img in enumerate(image_list):
+            #     xref = img[0]
+            #     base_image = pdf_document.extract_image(xref)
+            #     image_bytes = base_image["image"]
+            #     text += f'Details about {self.ordinal(img_index+1)} image present in the page {self.Image_class.process_image_bytes(image_bytes)} \n'
         
         return text
 
