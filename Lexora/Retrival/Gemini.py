@@ -9,7 +9,7 @@ tracemalloc.start()
 
 
 class RAGSystem:
-    def __init__(self, google_api_key="AIzaSyASciVtzGPKxHFbPo344pr0XBo59MYmDno"):
+    def __init__(self, google_api_key=""):
 
         # Configure Gemini
         genai.configure(api_key=google_api_key)
