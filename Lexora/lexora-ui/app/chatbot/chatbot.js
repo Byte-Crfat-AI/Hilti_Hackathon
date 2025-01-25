@@ -12,6 +12,7 @@ export default function Chatbot({ directoryPath, directQuery, onClose }) {
   ]);
   const [input, setInput] = useState(directQuery || "");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [hasProcessedInitialQuery, setHasProcessedInitialQuery] = useState(false);
   
   const messagesEndRef = useRef(null);
 
@@ -26,8 +27,9 @@ export default function Chatbot({ directoryPath, directQuery, onClose }) {
   useEffect(() => {
     if (directoryPath) {
       processDirectory(directoryPath);
-    } else if (directQuery) {
+    } else if (directQuery && !hasProcessedInitialQuery) {
       handleQuery(directQuery);
+      setHasProcessedInitialQuery(true);
     }
   }, [directoryPath, directQuery]);
 

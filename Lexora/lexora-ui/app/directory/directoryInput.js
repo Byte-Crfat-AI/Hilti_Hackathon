@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
-import { Folder, FolderOpen, RefreshCw, Check, X, Clock, FileText, Send } from "lucide-react";
+import { useState, useRef } from "react";
+import { Folder, FolderOpen, Check, X, Clock, FileText } from "lucide-react";
 import styles from "./directoryInput.module.css";
+import fs from 'fs';
+import path from 'path';
 
 export default function DirectoryInput({ onPathSubmit }) {
   const [directory, setDirectory] = useState("");
@@ -15,6 +17,16 @@ export default function DirectoryInput({ onPathSubmit }) {
   const [directQuery, setDirectQuery] = useState("");
   const [isDirectQueryMode, setIsDirectQueryMode] = useState(false);
   const fileInputRef = useRef(null);
+
+  const validateDirectory = (dirPath) => {
+    try {
+      // Check if path exists and is a directory
+      const stats = fs.statSync(dirPath);
+      return stats.isDirectory();
+    } catch (error) {
+      return false;
+    }
+  };
 
   const handleSetFolder = async (e) => {
     e.preventDefault();
@@ -30,12 +42,9 @@ export default function DirectoryInput({ onPathSubmit }) {
       setValidationError("");
       setStatusMessage("Validating directory...");
 
-      // Simulated directory validation 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Enhanced validation checks
-      if (path.length < 3) {
-        throw new Error("Invalid directory path");
+      // More robust directory validation
+      if (!validateDirectory(path)) {
+        throw new Error("Invalid or inaccessible directory path");
       }
 
       setRootFolder(path);
@@ -58,16 +67,21 @@ export default function DirectoryInput({ onPathSubmit }) {
       setIsProcessing(true);
 
       try {
-        // Simulated file processing with more realistic progress
-        for (let i = 1; i <= 10; i++) {
-          await new Promise((resolve) => setTimeout(resolve, 250));
-          setProgress(i * 10);
-        }
+        // More realistic progress simulation
+        const simulateProgress = async () => {
+          for (let i = 1; i <= 10; i++) {
+            await new Promise((resolve) => setTimeout(resolve, 250));
+            setProgress(i * 10);
+          }
+        };
+
+        await simulateProgress();
 
         setStatusMessage("File processing completed!");
         onPathSubmit(rootFolder);
       } catch (error) {
         setStatusMessage("File processing failed");
+        console.error(error);
       } finally {
         setIsProcessing(false);
       }
@@ -97,16 +111,22 @@ export default function DirectoryInput({ onPathSubmit }) {
     }
   };
 
-  const handleHistorySelect = (path) => {
-    setDirectory(path);
+  const handleHistorySelect = (selectedPath) => {
+    setDirectory(selectedPath);
     setValidationError("");
   };
 
   const handleFileInputChange = (e) => {
-    const selectedPath = e.target.files[0]?.path;
-    if (selectedPath) {
-      setDirectory(selectedPath);
-      setValidationError("");
+    // More robust file selection handling
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const selectedPath = files[0].name;  // Use name instead of path
+      const fullPath = path.join(e.target.value, selectedPath);
+      
+      if (fullPath) {
+        setDirectory(fullPath);
+        setValidationError("");
+      }
     }
   };
 
