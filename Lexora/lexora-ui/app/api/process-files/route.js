@@ -15,9 +15,7 @@ const lexoraPath = getLexoraPath(process.cwd());
 if (!lexoraPath) {
   throw new Error("Lexora path not found in the current working directory");
 }
-console.log('Lexora path:', lexoraPath);
 const PROCESSING_SCRIPT = path.join(lexoraPath, 'lexora-ui/public/Backend.py');
-console.log('Processing script:', PROCESSING_SCRIPT);
 let rootFolderCache = null;
 
 export async function POST(request) {
@@ -62,7 +60,6 @@ export async function POST(request) {
     if (query) {
       try {
         // Directly attempt to query without setup
-        console.log('Query:', query);
         const retrievalResult = await runPythonScript(PROCESSING_SCRIPT, ['query', query]);
 
         return NextResponse.json({

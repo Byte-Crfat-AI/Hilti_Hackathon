@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { Folder, FolderOpen, Check, X, Clock, FileText } from "lucide-react";
 import styles from "./directoryInput.module.css";
-import fs from 'fs';
 import path from 'path';
 
 export default function DirectoryInput({ onPathSubmit }) {
@@ -20,9 +19,6 @@ export default function DirectoryInput({ onPathSubmit }) {
 
   const validateDirectory = (dirPath) => {
     try {
-      // Check if path exists and is a directory
-      const stats = fs.statSync(dirPath);
-      return stats.isDirectory();
     } catch (error) {
       return false;
     }
