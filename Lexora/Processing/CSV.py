@@ -5,7 +5,12 @@ class CSV:
     def __init__(self):
         genai.configure(api_key="YOUR_API_KEY")
     def process_csv(path):
-        df = pd.read_excel(path)
+        if path.endswith(".csv"):
+            df = pd.read_csv(path)
+        elif path.endswith(".xlsx") or path.endswith(".xls"):
+            df = pd.read_excel(path)
+        else:
+            raise ValueError("Unsupported file format. Please provide a .csv or .xlsx file.")
         text_data = df.select_dtypes(include=['object'])
         all_text = text_data.values.flatten().tolist()
         all_text = [str(text) for text in all_text if pd.notna(text)]
