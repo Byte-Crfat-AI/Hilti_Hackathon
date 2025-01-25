@@ -37,6 +37,12 @@ class MainProcessing:
             elif path.endswith('.csv'):
                 # Process the csv
                 text = self.CSV.process_csv(path)
+            elif path.endswith('.xlsx'):
+                # Process the excel
+                text = self.CSV.process_csv(path)
+            elif path.endswith('.xls'):
+                # Process the excel
+                text = self.CSV.process_csv(path)
             else:
                 continue
             arr.append([text, path])
