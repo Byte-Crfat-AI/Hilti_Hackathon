@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { Folder, FolderOpen, RefreshCw, Check, X, Clock, FileText } from "lucide-react";
+import { Folder, FolderOpen, RefreshCw, Check, X, Clock, FileText, Send } from "lucide-react";
 import styles from "./directoryInput.module.css";
 
 export default function DirectoryInput({ onPathSubmit }) {
@@ -12,6 +12,8 @@ export default function DirectoryInput({ onPathSubmit }) {
   const [progress, setProgress] = useState(0);
   const [directoryHistory, setDirectoryHistory] = useState([]);
   const [validationError, setValidationError] = useState("");
+  const [directQuery, setDirectQuery] = useState("");
+  const [isDirectQueryMode, setIsDirectQueryMode] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleSetFolder = async (e) => {
@@ -72,12 +74,24 @@ export default function DirectoryInput({ onPathSubmit }) {
     }
   };
 
+  const handleDirectQuery = () => {
+    const query = directQuery.trim();
+    if (query) {
+      // Pass null as directory path to indicate direct query mode
+      onPathSubmit(null, query);
+    } else {
+      setValidationError("Please enter a query");
+    }
+  };
+
   const handleReset = () => {
     setRootFolder(null);
     setDirectory("");
     setStatusMessage("");
     setProgress(0);
     setValidationError("");
+    setDirectQuery("");
+    setIsDirectQueryMode(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -104,54 +118,103 @@ export default function DirectoryInput({ onPathSubmit }) {
             <FolderOpen className={styles.icon} />
             <h1 className={styles.title}>Lexora</h1>
             <p className={styles.description}>
-              Select a directory containing your documents
+              {isDirectQueryMode 
+                ? "Enter a direct query without processing files" 
+                : "Select a directory containing your documents"}
             </p>
           </div>
 
           <div className={styles.inputSection}>
             {!rootFolder ? (
               <>
-                <div className={styles.inputWrapper}>
-                  <input
-                    type="text"
-                    value={directory}
-                    onChange={(e) => {
-                      setDirectory(e.target.value);
-                      setValidationError("");
-                    }}
-                    className={`${styles.input} ${validationError ? styles.inputError : ''}`}
-                    placeholder="/path/to/documents"
-                    disabled={isProcessing}
-                  />
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileInputChange}
-                    webkitdirectory="true"
-                    directory="true"
-                    className={styles.fileInput}
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => fileInputRef.current?.click()}
-                    className={styles.folderSelectButton}
-                    disabled={isProcessing}
-                  >
-                    <Folder />
-                  </button>
-                </div>
-                {validationError && (
-                  <p className={styles.errorMessage}>{validationError}</p>
+                {!isDirectQueryMode ? (
+                  <>
+                    <div className={styles.inputWrapper}>
+                      <input
+                        type="text"
+                        value={directory}
+                        onChange={(e) => {
+                          setDirectory(e.target.value);
+                          setValidationError("");
+                        }}
+                        className={`${styles.input} ${validationError ? styles.inputError : ''}`}
+                        placeholder="/path/to/documents"
+                        disabled={isProcessing}
+                      />
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileInputChange}
+                        webkitdirectory="true"
+                        directory="true"
+                        className={styles.fileInput}
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => fileInputRef.current?.click()}
+                        className={styles.folderSelectButton}
+                        disabled={isProcessing}
+                      >
+                        <Folder />
+                      </button>
+                    </div>
+                    {validationError && (
+                      <p className={styles.errorMessage}>{validationError}</p>
+                    )}
+                    <div className={styles.buttonGroup}>
+                      <button
+                        type="submit"
+                        className={styles.button}
+                        disabled={isProcessing}
+                      >
+                        {isProcessing ? "Validating..." : "Set Folder"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsDirectQueryMode(true)}
+                        className={styles.alternateButton}
+                      >
+                        Direct Query
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.inputWrapper}>
+                      <input
+                        type="text"
+                        value={directQuery}
+                        onChange={(e) => {
+                          setDirectQuery(e.target.value);
+                          setValidationError("");
+                        }}
+                        className={`${styles.input} ${validationError ? styles.inputError : ''}`}
+                        placeholder="Enter your query..."
+                        disabled={isProcessing}
+                      />
+                    </div>
+                    {validationError && (
+                      <p className={styles.errorMessage}>{validationError}</p>
+                    )}
+                    <div className={styles.buttonGroup}>
+                      <button
+                        type="button"
+                        onClick={handleDirectQuery}
+                        className={styles.button}
+                        disabled={isProcessing}
+                      >
+                        Send Query
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsDirectQueryMode(false)}
+                        className={styles.alternateButton}
+                      >
+                        Back to Folder
+                      </button>
+                    </div>
+                  </>
                 )}
-                <div className={styles.buttonGroup}>
-                  <button
-                    type="submit"
-                    className={styles.button}
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? "Validating..." : "Set Folder"}
-                  </button>
-                </div>
               </>
             ) : (
               <div className={styles.selectedPathSection}>

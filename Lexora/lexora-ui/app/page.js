@@ -6,23 +6,29 @@ import Chatbot from "./chatbot/chatbot";
 
 export default function Home() {
   const [directoryPath, setDirectoryPath] = useState(null);
+  const [directQuery, setDirectQuery] = useState(null);
 
-  const handlePathSubmit = (path) => {
-    setDirectoryPath(path); 
+  const handlePathSubmit = (path, query = null) => {
+    setDirectoryPath(path);
+    setDirectQuery(query);
   };
 
   const handleChatClose = () => {
-    setDirectoryPath(null)
+    setDirectoryPath(null);
+    setDirectQuery(null);
   };
 
   return (
     <div>
-      {!directoryPath ? (
+      {!directoryPath && !directQuery ? (
         <DirectoryInput onPathSubmit={handlePathSubmit} />
       ) : (
-        <Chatbot directoryPath={directoryPath} onClose={handleChatClose} />
+        <Chatbot 
+          directoryPath={directoryPath} 
+          directQuery={directQuery} 
+          onClose={handleChatClose} 
+        />
       )}
     </div>
   );
 }
-

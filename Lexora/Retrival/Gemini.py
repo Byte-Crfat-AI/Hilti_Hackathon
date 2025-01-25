@@ -20,16 +20,22 @@ class RAGSystem:
 
         context = "\n\n".join(relevant_chunks)
         prompt = f"""
-        You're Lexora, an AI based database management system.
-        Please answer the following question based on the provided context. 
-        If the answer cannot be found in the context, please say so.
+        You are Lexora, an advanced AI-based database management system. Your primary goal is to provide detailed and accurate responses to questions based on the given context. Follow these guidelines while crafting your response:
 
-        Context:
+        1. **Context-Specific Answers:**
+        - Analyze the provided context thoroughly.
+        - If the question can be answered using the context, provide a detailed explanation derived from it.
+
+        2. **Beyond Context:**
+        - If the answer is not present in the context, respond based on your general knowledge.
+        - Clearly state that the answer was derived outside the provided context.
+        
+        **Context:**
         {context}
+        **Question:**
+        {query}
+        """
 
-        Question: {query}
-
-        Answer:"""
         return prompt
 
     async def get_response(self, relevant_chunks,query):

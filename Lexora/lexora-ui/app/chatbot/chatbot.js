@@ -1,24 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./chatbot.module.css";
 
-export default function Chatbot({ directoryPath, onClose }) {
+export default function Chatbot({ directoryPath, directQuery, onClose }) {
   const router = useRouter();
-  const [isChatOpen, setIsChatOpen] = useState(!!directoryPath);
+  const [isChatOpen, setIsChatOpen] = useState(true);
   const [messages, setMessages] = useState([
-    { role: "bot", content: "Hello! How can I help you with your documents?" },
+    { role: "bot", content: "Hello! I'm Lexora, How can I help you with your documents?" },
   ]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(directQuery || "");
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isProcessing]);
 
   useEffect(() => {
     if (directoryPath) {
-      setIsChatOpen(true);
       processDirectory(directoryPath);
+    } else if (directQuery) {
+      handleQuery(directQuery);
     }
-  }, [directoryPath]);
+  }, [directoryPath, directQuery]);
 
   const processDirectory = async (path) => {
     try {
@@ -105,68 +116,61 @@ export default function Chatbot({ directoryPath, onClose }) {
   };
 
   const handleClose = () => {
-    onClose(); // Notify parent to clear directoryPath
+    onClose(); // Notify parent to clear directoryPath and directQuery
     router.push("/"); // Redirect to directory input page
   };
 
   return (
     <div className={`${styles.chatbot} ${isChatOpen ? styles.open : ""}`}>
-      {isChatOpen ? (
-        <div className={styles.container}>
-          <header className={styles.header}>
-            <h3>Lexora</h3>
-            <button
-              onClick={handleClose}
-              className={styles.closeButton}
-              aria-label="Close chat"
-            >
-              ✕
-            </button>
-          </header>
-          <div className={styles.chatbox}>
-            <div className={styles.messages}>
-              {messages.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className={`${styles.message} ${styles[msg.role]}`}
-                >
-                  {msg.content}
-                </div>
-              ))}
-              {isProcessing && (
-                <div className={`${styles.message} ${styles.bot}`}>
-                  Processing...
-                </div>
-              )}
-            </div>
-            <footer className={styles.footer}>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className={styles.input}
-                placeholder="Ask about your documents..."
-                disabled={isProcessing}
-              />
-              <button
-                onClick={handleSend}
-                className={styles.sendButton}
-                disabled={isProcessing}
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <h3>Lexora</h3>
+          <button
+            onClick={handleClose}
+            className={styles.closeButton}
+            aria-label="Close chat"
+          >
+            ✕
+          </button>
+        </header>
+        <div className={styles.chatbox}>
+          <div className={styles.messages}>
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`${styles.message} ${styles[msg.role]}`}
               >
-                Send
-              </button>
-            </footer>
+                {msg.content}
+              </div>
+            ))}
+            {isProcessing && (
+              <div className={`${styles.message} ${styles.bot}`}>
+                Processing...
+              </div>
+            )}
+            {/* Add a dummy div to scroll to */}
+            <div ref={messagesEndRef} />
           </div>
+          <footer className={styles.footer}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className={styles.input}
+              placeholder="Ask about your documents..."
+              disabled={isProcessing}
+            />
+            <button
+              onClick={handleSend}
+              className={styles.sendButton}
+              disabled={isProcessing}
+            >
+              Send
+            </button>
+          </footer>
         </div>
-      ) : (
-        <button
-          onClick={() => setIsChatOpen(true)}
-          className={styles.openButton}
-        >
-          Open Chat
-        </button>
-      )}
+      </div>
     </div>
   );
 }

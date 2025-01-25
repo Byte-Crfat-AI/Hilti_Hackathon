@@ -3,9 +3,22 @@ import path from 'path';
 import { spawn } from 'child_process';
 import { NextResponse } from 'next/server';
 
-// Correct path to the Python script
-const PROCESSING_SCRIPT = '/home/dev303/Documents/Hilti_Hackathon/Lexora/lexora-ui/public/Backend.py';
-let rootFolderCache = null; // Cache the processed folder path globally
+function getLexoraPath(currentPath) {
+  const match = currentPath.match(/^(.*[\\/](Lexora))(?:[\\/]|$)/);
+  if (match) {
+    return match[1];
+  }
+  return null;
+}
+
+const lexoraPath = getLexoraPath(process.cwd());
+if (!lexoraPath) {
+  throw new Error("Lexora path not found in the current working directory");
+}
+console.log('Lexora path:', lexoraPath);
+const PROCESSING_SCRIPT = path.join(lexoraPath, 'lexora-ui/public/Backend.py');
+console.log('Processing script:', PROCESSING_SCRIPT);
+let rootFolderCache = null;
 
 export async function POST(request) {
   try {
@@ -47,66 +60,55 @@ export async function POST(request) {
     }
 
     if (query) {
-      if (!rootFolderCache) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: 'No processed folder available for query. Process a folder first.',
-          },
-          { status: 400 }
-        );
-      }
-
       try {
+        // Directly attempt to query without setup
+        console.log('Query:', query);
         const retrievalResult = await runPythonScript(PROCESSING_SCRIPT, ['query', query]);
 
         return NextResponse.json({
           success: true,
-          message: 'Query processed successfully.',
-          data: retrievalResult,
+          message: 'Direct query processed.',
+          data: { response: retrievalResult },
         });
       } catch (error) {
-        console.error('Error during query processing:', error);
+        console.error('Error during direct query processing:', error);
         return NextResponse.json(
-          { success: false, message: 'Error processing query.', error: error.message },
+          {
+            success: false,
+            message: 'Error processing direct query.',
+            error: error.message
+          },
           { status: 500 }
         );
       }
     }
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Error in POST request:', error);
     return NextResponse.json(
-      { success: false, message: 'An unexpected error occurred.', error: error.message },
+      { success: false, message: 'Internal server error.', error: error.message },
       { status: 500 }
     );
   }
 }
 
-async function runPythonScript(scriptPath, args = []) {
+async function runPythonScript(scriptPath, args) {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', [scriptPath, ...args]);
+    const process = spawn('python', [scriptPath, ...args]);
 
-    let outputData = '';
-    let errorData = '';
-
-    pythonProcess.stdout.on('data', (chunk) => {
-      outputData += chunk.toString();
+    let output = '';
+    process.stdout.on('data', (data) => {
+      output += data.toString();
     });
 
-    pythonProcess.stderr.on('data', (chunk) => {
-      errorData += chunk.toString();
+    process.stderr.on('data', (data) => {
+      console.error('Python script error:', data.toString());
     });
 
-    pythonProcess.on('close', (code) => {
+    process.on('close', (code) => {
       if (code === 0) {
-        try {
-          const parsedData = JSON.parse(outputData);
-          resolve(parsedData);
-        } catch (e) {
-          reject(new Error('Failed to parse output from script.'));
-        }
+        resolve(output);
       } else {
-        reject(new Error(`Script failed with code ${code}: ${errorData}`));
+        reject(new Error(`Python script exited with code ${code}`));
       }
     });
   });

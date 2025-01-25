@@ -18,7 +18,7 @@ from main_keyword_extraction import MainKeywordExtraction
 from main_retrieval import MainRetrieval
 import asyncio
 
-class main:
+class MainClass:
     def __init__(self):
         self.processing = MainProcessing()
         self.keyword_extraction = MainKeywordExtraction()
@@ -35,7 +35,31 @@ class main:
     
     
 # Example
-Main = main()
-root_folder = "D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder"
-Main.setup(root_folder)
+# Main = main()
+# root_folder = "D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder"
+# Main.setup(root_folder)
 # print(Main.query("Name a few pre-alloyed powders used in diamond tool industry."))
+
+import sys
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python Backend.py [setup|query] [argument]")
+        sys.exit(1)
+
+    action = sys.argv[1]
+    Main = MainClass()  
+
+    if action == 'setup' and len(sys.argv) == 3:
+        root_folder = sys.argv[2]
+        Main.setup(root_folder)
+    elif action == 'query' and len(sys.argv) == 3:
+        query = sys.argv[2]
+        result = Main.query(query)
+        print(result)
+    else:
+        print("Invalid arguments")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
