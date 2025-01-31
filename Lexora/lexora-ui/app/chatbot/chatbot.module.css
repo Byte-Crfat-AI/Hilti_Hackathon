@@ -106,6 +106,7 @@
   flex-direction: column;
   gap: 12px;
   background-color: var(--neutral-700);
+  height: calc(85vh - 120px);
 }
 
 .message {

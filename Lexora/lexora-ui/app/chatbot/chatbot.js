@@ -85,10 +85,10 @@ export default function Chatbot({ directoryPath, directQuery, onClose }) {
             "I found relevant information but couldn't format it properly."
         );
       } else {
-        addMessage(
-          "bot",
-          "Sorry, I couldn't process your query. Please try again."
-        );
+        // addMessage(
+        //   "bot",
+        //   "Sorry, I couldn't process your query. Please try again."
+        // );
       }
     } catch (error) {
       addMessage("bot", "Error processing your query. Please try again.");

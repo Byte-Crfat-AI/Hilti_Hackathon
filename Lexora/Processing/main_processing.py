@@ -2,7 +2,7 @@ import os
 from Text import PDF
 from Images import Image
 from Audio import Audio
-from CSV import CSV
+from CSV import CSVProcessor
 import tqdm
 # Lexora is compatible with four file extensions .pdf, .jpg , .jpeg, .png , .mp3, .csv
 
@@ -11,7 +11,7 @@ class MainProcessing:
         self.PDF = PDF()
         self.Image = Image()
         self.Audio = Audio()
-        self.CSV = CSV()
+        self.CSV = CSVProcessor(api_key='AIzaSyBkXXtG5XeopoPisjR0LGqFdNcy3F_a8eo')
 
     def read_files(self, target_folder):
         paths = []

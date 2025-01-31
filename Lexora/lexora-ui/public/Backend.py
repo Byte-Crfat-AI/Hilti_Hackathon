@@ -1,5 +1,8 @@
 import os
 import re
+import warnings
+warnings.filterwarnings("ignore")
+
 def get_lexora_path(path):
     match = re.search(r'^(.*\\Lexora)(?:\\|$)', path)
     if match:
@@ -35,31 +38,31 @@ class MainClass:
     
     
 # Example
-# Main = main()
+# Main = MainClass()
 # root_folder = "D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder"
 # Main.setup(root_folder)
-# print(Main.query("Name a few pre-alloyed powders used in diamond tool industry."))
+# print(Main.query("get me the file with a text 'collect moments not things' "))
 
-import sys
+# import sys
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python Backend.py [setup|query] [argument]")
-        sys.exit(1)
+# def main():
+#     if len(sys.argv) < 2:
+#         print("Usage: python Backend.py [setup|query] [argument]")
+#         sys.exit(1)
 
-    action = sys.argv[1]
-    Main = MainClass()  
+#     action = sys.argv[1]
+#     Main = MainClass()  
 
-    if action == 'setup' and len(sys.argv) == 3:
-        root_folder = sys.argv[2]
-        Main.setup(root_folder)
-    elif action == 'query' and len(sys.argv) == 3:
-        query = sys.argv[2]
-        result = Main.query(query)
-        print(result)
-    else:
-        print("Invalid arguments")
-        sys.exit(1)
+#     if action == 'setup' and len(sys.argv) == 3:
+#         root_folder = sys.argv[2]
+#         Main.setup(root_folder)
+#     elif action == 'query' and len(sys.argv) == 3:
+#         query = sys.argv[2]
+#         result = Main.query(query)
+#         print(result)
+#     else:
+#         print("Invalid arguments")
+#         sys.exit(1)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

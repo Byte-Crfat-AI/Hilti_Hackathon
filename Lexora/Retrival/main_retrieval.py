@@ -30,7 +30,8 @@ class MainRetrieval:
         keyword_faiss_temp = os.listdir(database_dir)
         keyword_faiss = [keyword_faiss_temp[i] for i in range(len(keyword_faiss_temp)) if keyword_faiss_temp[i][-6:] == ".faiss"]
         keyword_metadata = [f'metadata_{keyword_faiss[i][14:-6]}.pkl' for i in range(len(keyword_faiss))]
-        keywords = [ranked_set[i][2] for i in range(len(ranked_set))]
+        keywords = [(ranked_set[i][2] , ranked_set[i][1]) for i in range(len(ranked_set))]
+        print(keywords)
         files = {}
         for i in tqdm(range(len(ranked_set))):
             for j in range(len(keyword_faiss)):
@@ -53,7 +54,7 @@ class MainRetrieval:
         files = {k: v for k, v in sorted(files.items(), key=lambda item: item[1], reverse=True)}
         file_paths = list(files.keys())
         if intent == 'retrieve file':
-            return file_paths
+            return file_paths[:5]
         else:
             def match_pattern(path):
                 folder_name = os.path.basename(os.path.dirname(path))
@@ -65,5 +66,6 @@ class MainRetrieval:
                 modified_path = match_pattern(file_paths[i])
                 faiss_files.append(os.path.join(embedding_database_dir, f"Embedding_index_{modified_path}.faiss"))
                 chunk_files.append(os.path.join(embedding_database_dir, f"metadata_{modified_path}.pkl"))
+            print(faiss_files, chunk_files)
             return asyncio.run(self.RAG.respond(query,faiss_files, chunk_files))
     

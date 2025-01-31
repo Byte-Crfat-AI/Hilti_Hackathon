@@ -24,4 +24,6 @@ class Embeddings:
                 outputs = self.model(**inputs)
             cls_embedding = outputs.last_hidden_state[:, 0, :]  # CLS token embedding
             embeddings.append(cls_embedding.squeeze(0))
+        if len(embeddings) != len(chunks):
+            raise ValueError(f"Mismatch between number of embeddings ({len(embeddings)}) and chunks ({len(chunks)})")
         return torch.stack(embeddings).cpu().numpy(), chunks

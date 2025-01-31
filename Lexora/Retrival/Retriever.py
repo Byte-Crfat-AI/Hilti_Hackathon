@@ -81,7 +81,7 @@ class FaissSearcher:
         combined_vectors = np.vstack(all_vectors)
         
         # Create new index with same dimension
-        self.combined_index = faiss.IndexFlatL2(self.dimension)
+        self.combined_index = faiss.IndexFlatIP(self.dimension)
         
         # Add all vectors to the new index
         self.combined_index.add(combined_vectors)

@@ -22,8 +22,9 @@ class VectorDB:
         embeddings = [ranked_set[i][0] for i in range(len(ranked_set))]
         metadata = [[ranked_set[i][1], ranked_set[i][2], path] for i in range(len(ranked_set))]
         embedding_matrix = np.array(embeddings, dtype="float32")
+        faiss.normalize_L2(embedding_matrix) #modified
         dimension = embedding_matrix.shape[1]
-        index = faiss.IndexFlatL2(dimension)
+        index = faiss.IndexFlatIP(dimension)#modified
         index.add(embedding_matrix)
         keyword_dir = os.path.join(self.Lexora_path,"Database", "Keywords")
         os.makedirs(keyword_dir, exist_ok=True)
@@ -33,8 +34,9 @@ class VectorDB:
             pickle.dump(metadata, f)
 
     def embeddings_db(self, embeddings,chunks, path):
+        faiss.normalize_L2(embeddings)#modified
         d = embeddings.shape[1]
-        index = faiss.IndexFlatL2(d)
+        index = faiss.IndexFlatIP(d)#modified
         index.add(embeddings)
         embedding_dir = os.path.join(self.Lexora_path,"Database", "Embeddings")
         os.makedirs(embedding_dir, exist_ok=True)
