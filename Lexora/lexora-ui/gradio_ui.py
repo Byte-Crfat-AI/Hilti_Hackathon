@@ -6,8 +6,8 @@ def get_lexora_path(path):
     if match:
         return match.group(1)
     return None
-Lexora_path = get_lexora_path(os.getcwd())
-backend_path = os.path.join(Lexora_path , "lexora-ui\public")
+Lexora_path = '/workspace/Hilti_Hackathon/Lexora'
+backend_path = os.path.join(Lexora_path , "lexora-ui/public")
 import sys
 sys.path.append(backend_path)
 from Backend import MainClass

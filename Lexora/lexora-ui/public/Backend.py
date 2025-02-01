@@ -8,7 +8,7 @@ def get_lexora_path(path):
     if match:
         return match.group(1)
     return None
-Lexora_path = get_lexora_path(os.getcwd())
+Lexora_path = '/workspace/Hilti_Hackathon/Lexora'
 keyword_extraction_path = os.path.join(Lexora_path , "Keyword_Extraction")
 Processing_path = os.path.join(Lexora_path , "Processing")
 Retrival_path = os.path.join(Lexora_path , "Retrival")
@@ -33,7 +33,7 @@ class MainClass:
         print("Lexora is ready to use")
         
     async def query(self, query):
-        return  await self.retrieval.main_retrieval(query)
+        return self.retrieval.main_retrieval(query)
 
     
     

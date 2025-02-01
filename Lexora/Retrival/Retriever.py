@@ -6,6 +6,7 @@ from typing import List, Dict, Tuple
 from transformers import AutoModel, AutoTokenizer
 from sentence_transformers import CrossEncoder
 import os
+import time
 
 class FaissSearcher:
     def __init__(self, model_name = "bert-base-uncased", 
@@ -131,6 +132,7 @@ class FaissSearcher:
 
         # Initialize searcher
         chunks=[]
+        start_time=time.time()
 
         try:
             # Load indices and chunks
@@ -142,6 +144,9 @@ class FaissSearcher:
             # Print results
             for idx, result in enumerate(results, 1):
                 chunks.append(result['chunk'])
+
+            end_time=time.time()
+            print('Time to retrieve chunks :',end_time-start_time)
             return chunks
                 
         except Exception as e:

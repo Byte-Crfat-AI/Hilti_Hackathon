@@ -6,7 +6,7 @@ def get_lexora_path(path):
     if match:
         return match.group(1)
     return None
-lexora_path = get_lexora_path(os.getcwd())
+lexora_path = '/workspace/Hilti_Hackathon/Lexora'
 keyword_extraction_dir = os.path.join(lexora_path, "Keyword_Extraction")
 database_dir = os.path.join(lexora_path, "Database" , "Keywords")
 embedding_database_dir = os.path.join(lexora_path, "Database" , "Embeddings")
@@ -17,19 +17,20 @@ import faiss
 from Gemini  import RAGSystem
 import numpy as np
 import pickle
+import time
 from tqdm import tqdm
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 class MainRetrieval:
     def __init__(self):
         self.keyword = Keyword()
         self.RAG = RAGSystem()
-    async def main_retrieval(self, query):
+    def main_retrieval(self, query):
+        startmk=time.time()
         intent = get_intent(query)
         print(intent)
         if intent == 'Casual conversation':
-            response =  await self.RAG.chat(query)
+            response = self.RAG.chat(query)
             return response
         ranked_set = self.keyword.keyword_main(query)
         keyword_faiss_temp = os.listdir(database_dir)
@@ -58,10 +59,13 @@ class MainRetrieval:
                     files[file_path] = score
         files = {k: v for k, v in sorted(files.items(), key=lambda item: item[1], reverse=True)}
         file_paths = list(files.keys())
+        endmk=time.time()
+        print('Time for keyword se finding :',endmk-startmk)
         if intent == 'retrieve file':
             return file_paths[:5]
         else:
             def match_pattern(path):
+                path = path.replace("\\", "/")
                 folder_name = os.path.basename(os.path.dirname(path))
                 file_name = os.path.splitext(os.path.basename(path))[0]
                 return f"{folder_name}_{file_name.replace('.', '_')}"
@@ -71,6 +75,6 @@ class MainRetrieval:
                 modified_path = match_pattern(file_paths[i])
                 faiss_files.append(os.path.join(embedding_database_dir, f"Embedding_index_{modified_path}.faiss"))
                 chunk_files.append(os.path.join(embedding_database_dir, f"metadata_{modified_path}.pkl"))
-            response = await self.RAG.respond(query, faiss_files, chunk_files)
+            response = self.RAG.respond(query, faiss_files, chunk_files)
             return response
     
