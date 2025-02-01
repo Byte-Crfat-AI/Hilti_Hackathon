@@ -166,3 +166,78 @@ nlu:
     - What customer feedback is mentioned in the forms?
     - Summarize the 'team meeting minutes' from the file.
     - What does the document say about 'project deadlines'?
+
+- intent: Casual conversation
+  examples: |
+    - Hi
+    - Hello
+    - Hey
+    - Good morning
+    - Good evening
+    - Good afternoon
+    - How are you?
+    - What's up?
+    - How's it going?
+    - Howdy
+    - Hey there
+    - What's new?
+    - How have you been?
+    - How's everything?
+    - How's your day?
+    - How's your week?
+    - How's your weekend?
+    - How's your morning?
+    - How's your evening?
+    - How's your afternoon?
+    - How's your night?
+    - How's your day going?
+    - How's your week going?
+    - How's your weekend going?
+    - How's your morning going?
+    - How's your evening going?
+    - How's your afternoon going?
+    - How's your night going?
+    - How are you doing?
+    - How are you feeling?
+    - How are you today?
+    - How are you this morning?
+    - How are you this evening?
+    - How are you this afternoon?
+    - How are you this night?
+    - How are you this week?
+    - Who are you ?
+    - What are you ?
+    - What is your name ?
+    - What can you do ?
+    - What are your capabilities ?
+    - What are your features ?
+    - What are your functions ?
+    - What are your skills ?
+    - What are your abilities ?
+    - What are your talents ?
+    - What are your powers ?
+    - What are your strengths ?
+    - What are your advantages ?
+    - What are your benefits ?
+    - What are your assets ?
+    - What are your virtues ?
+    - what is  1 + 1?
+    - what is  2 + 2?
+    - Name a fruit
+    - Name a vegetable
+    - Name a color
+    - Name a number
+    - Name a country
+    - Who are your founders?
+    - Who created you?
+    - Who developed you?
+    - Who designed you?
+    - Who made you?
+    - What is the purpose of your existence?
+    - What is your goal?
+    - What is your mission?
+    - Who is Albert Einstein?
+    - Who is Isaac Newton?
+    - Who is Nikola Tesla?
+    - Who is Thomas Edison?
+    - Who is Leonardo da Vinci?

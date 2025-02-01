@@ -1,29 +1,31 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 
-
 class Embeddings:
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("google-bert/bert-base-uncased")
-        self.model = AutoModel.from_pretrained("google-bert/bert-base-uncased")
+        self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")  
+        self.model = AutoModel.from_pretrained("bert-base-uncased")
 
     def chunk_text(self, text, max_length=512, overlap=100):
-        tokens = self.tokenizer.encode(text, add_special_tokens=False)
+        words = text.split()  
         chunks = []
-        for i in range(0, len(tokens), max_length - overlap):
-            chunk = tokens[i:i + max_length]
-            chunks.append(self.tokenizer.decode(chunk))
-        return chunks
+        chunks_returned = []
+        i = 0
+        while i < len(words):
+            chunk = " ".join(words[i : i + max_length - overlap])  
+            tokenized_chunk = self.tokenizer.encode(chunk, add_special_tokens=True, truncation=True, max_length=max_length)
+            chunks.append(tokenized_chunk)
+            chunks_returned.append(chunk)
+            i += max_length - overlap  
+        return chunks, chunks_returned
 
     def get_embeddings(self, text):
-        chunks = self.chunk_text(text)
+        chunks , chunks_returned = self.chunk_text(text)
         embeddings = []
         for chunk in chunks:
-            inputs = self.tokenizer(chunk, padding=True, truncation=True, return_tensors="pt")
+            inputs = torch.tensor([chunk])  
             with torch.no_grad():
-                outputs = self.model(**inputs)
-            cls_embedding = outputs.last_hidden_state[:, 0, :]  # CLS token embedding
+                outputs = self.model(inputs)
+            cls_embedding = outputs.last_hidden_state[:, 0, :]  
             embeddings.append(cls_embedding.squeeze(0))
-        if len(embeddings) != len(chunks):
-            raise ValueError(f"Mismatch between number of embeddings ({len(embeddings)}) and chunks ({len(chunks)})")
-        return torch.stack(embeddings).cpu().numpy(), chunks
+        return torch.stack(embeddings).cpu().numpy(), chunks_returned

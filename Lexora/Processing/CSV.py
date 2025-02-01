@@ -30,7 +30,7 @@ class CSVProcessor:
         return description
 
 # Usage
-# api_key = "AIzaSyBkXXtG5XeopoPisjR0LGqFdNcy3F_a8eo"
+# api_key = "YOUR_GOOGLE_API_KEY"
 # csv_processor = CSVProcessor(api_key)
 # csv_path = "D:\Hilti_Hackathon\Hilti_Hackathon\Target_Folder\Target_Folder\Additional_Files\CSVs\Employee-Management-Data-for-Analysis.xlsx"
 # extracted_text = csv_processor.process_csv(csv_path)

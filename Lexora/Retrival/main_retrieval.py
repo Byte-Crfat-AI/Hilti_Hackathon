@@ -19,13 +19,18 @@ import numpy as np
 import pickle
 from tqdm import tqdm
 import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 class MainRetrieval:
     def __init__(self):
         self.keyword = Keyword()
         self.RAG = RAGSystem()
-    def main_retrieval(self, query):
+    async def main_retrieval(self, query):
         intent = get_intent(query)
+        print(intent)
+        if intent == 'Casual conversation':
+            response =  await self.RAG.chat(query)
+            return response
         ranked_set = self.keyword.keyword_main(query)
         keyword_faiss_temp = os.listdir(database_dir)
         keyword_faiss = [keyword_faiss_temp[i] for i in range(len(keyword_faiss_temp)) if keyword_faiss_temp[i][-6:] == ".faiss"]
@@ -66,6 +71,6 @@ class MainRetrieval:
                 modified_path = match_pattern(file_paths[i])
                 faiss_files.append(os.path.join(embedding_database_dir, f"Embedding_index_{modified_path}.faiss"))
                 chunk_files.append(os.path.join(embedding_database_dir, f"metadata_{modified_path}.pkl"))
-            print(faiss_files, chunk_files)
-            return asyncio.run(self.RAG.respond(query,faiss_files, chunk_files))
+            response = await self.RAG.respond(query, faiss_files, chunk_files)
+            return response
     

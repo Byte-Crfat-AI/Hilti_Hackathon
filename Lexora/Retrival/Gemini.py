@@ -9,7 +9,7 @@ tracemalloc.start()
 
 
 class RAGSystem:
-    def __init__(self, google_api_key=""):
+    def __init__(self, google_api_key="YOUR_GOOGLE_API_KEY"):
 
         # Configure Gemini
         genai.configure(api_key=google_api_key)
@@ -17,7 +17,6 @@ class RAGSystem:
         self.searcher = FaissSearcher()
 
     def generate_prompt(self, query, relevant_chunks):
-
         context = "\n\n".join(relevant_chunks)
         prompt = f"""
         You are Lexora, an advanced AI-based database management system. Your primary goal is to provide detailed and accurate responses to questions based on the given context. Follow these guidelines while crafting your response:
@@ -53,6 +52,16 @@ class RAGSystem:
         # Get response
         response = await self.get_response(text_chunks,query)
         return response
+    
+    async def chat(self,query):
+        prompt = f"""
+        You are Lexora, an advanced AI-based database management system.
+        You are designed by Haris Narrendran, Devansh Yadav and Manish Shaw, students of IIT Bombay.
+        Answer the following question based on your knowledge:
+        {query}
+        """
+        response = await self.model.generate_content_async(prompt)
+        return response.text
 
 # import asyncio
 

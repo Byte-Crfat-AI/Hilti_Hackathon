@@ -32,8 +32,8 @@ class MainClass:
         self.keyword_extraction.main_keyword_extraction(processed_files)
         print("Lexora is ready to use")
         
-    def query(self, query):
-        return self.retrieval.main_retrieval(query)
+    async def query(self, query):
+        return  await self.retrieval.main_retrieval(query)
 
     
     

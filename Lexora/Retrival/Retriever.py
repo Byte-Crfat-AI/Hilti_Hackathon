@@ -8,7 +8,7 @@ from sentence_transformers import CrossEncoder
 import os
 
 class FaissSearcher:
-    def __init__(self, model_name = "google-bert/bert-base-uncased", 
+    def __init__(self, model_name = "bert-base-uncased", 
                  reranker_name = "cross-encoder/ms-marco-MiniLM-L-6-v2",
                  device = "cuda" if torch.cuda.is_available() else "cpu"):
         # Initialize encoder model and tokenizer

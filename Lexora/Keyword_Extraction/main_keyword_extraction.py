@@ -15,7 +15,6 @@ class MainKeywordExtraction:
                 # Extract keywords and embeddings
                 ranked_set = self.keyword.keyword_main(text)
                 embeddings, chunks = self.embeddings.get_embeddings(text)
-                
                 # Store in the database
                 self.vector_db.keywords_db(ranked_set, path)
                 self.vector_db.embeddings_db(embeddings, chunks, path)

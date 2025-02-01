@@ -17,8 +17,8 @@ def process_value(value):
     response = Main.setup(value)
     return "Processed Successfully"
 
-def chatbot_response(message, history):
-    response = Main.query(message)
+async def chatbot_response(message, history):
+    response = await Main.query(message)
     return response
 
 with gr.Blocks() as demo:
@@ -27,7 +27,7 @@ with gr.Blocks() as demo:
         with gr.Column(scale=1):
             value_input = gr.Textbox(label="Path of the root folder")
             process_button = gr.Button("Process")
-            output_text = gr.Textbox(label="")
+            output_text = gr.Textbox(label="Processing Result")
             process_button.click(process_value, value_input, output_text)
         with gr.Column(scale=3):
             chatbot = gr.ChatInterface(fn=chatbot_response)
