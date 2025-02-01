@@ -11,7 +11,7 @@ class MainProcessing:
         self.PDF = PDF()
         self.Image = Image()
         self.Audio = Audio()
-        self.CSV = CSVProcessor(api_key='YOUR_GOOGLE_API_KEY')
+        self.CSV = CSVProcessor(api_key='AIzaSyBkXXtG5XeopoPisjR0LGqFdNcy3F_a8eo')
 
     def read_files(self, target_folder):
         paths = []
