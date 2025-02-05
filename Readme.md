@@ -49,13 +49,13 @@ Step-by-step instructions to install and set up the project.
    rasa run --enable-api -m models\20250122-121655-isometric-cantaloupe.tar.gz
    ```
 
-3. To start using Lexora:
+3. To start using Lexora (gradio):
    ```bash
    python -m venv venv
    venv/scripts/activate
    pip install -r requirements.txt
    cd Lexora/lexora-ui
-   npm run dev
+   python gradio_ui.py
    ```
 
 Your local server will be running, and you will be able to use Lexora.
