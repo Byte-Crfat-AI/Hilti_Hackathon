@@ -166,6 +166,9 @@ nlu:
     - What customer feedback is mentioned in the forms?
     - Summarize the 'team meeting minutes' from the file.
     - What does the document say about 'project deadlines'?
+    - Define Atomisation.
+    - Define Condensation.
+
 
 - intent: Casual conversation
   examples: |

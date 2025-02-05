@@ -1,12 +1,12 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 
-class Embeddings:
+class Embeddings():
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")  
-        self.model = AutoModel.from_pretrained("bert-base-uncased")
+        self.tokenizer = AutoTokenizer.from_pretrained("NeuML/pubmedbert-base-embeddings")
+        self.model = AutoModel.from_pretrained("NeuML/pubmedbert-base-embeddings")
 
-    def chunk_text(self, text, max_length=512, overlap=100):
+    def chunk_text(self, text, max_length=100, overlap=20):
         words = text.split()  
         chunks = []
         chunks_returned = []

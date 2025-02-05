@@ -8,13 +8,15 @@ from sentence_transformers import CrossEncoder
 import os
 
 class FaissSearcher:
-    def __init__(self, model_name = "bert-base-uncased", 
-                 reranker_name = "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    def __init__(self, 
+                 tokenizer_name = "NeuML/pubmedbert-base-embeddings"
+                 ,model_name = "NeuML/pubmedbert-base-embeddings",
+                 reranker_name = 'cross-encoder/ms-marco-MiniLM-L-6-v2',
                  device = "cuda" if torch.cuda.is_available() else "cpu"):
         # Initialize encoder model and tokenizer
         self.device = device
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.encoder = AutoModel.from_pretrained(model_name).to(device)
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        self.encoder = AutoModel.from_pretrained(model_name).to(self.device)
         self.encoder.eval()
         
         # Initialize reranker

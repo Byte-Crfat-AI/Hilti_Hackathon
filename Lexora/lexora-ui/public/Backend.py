@@ -29,6 +29,7 @@ class MainClass:
 
     def setup(self, root_folder):
         processed_files = self.processing.main_processing(root_folder)
+        print('Processing Done')
         self.keyword_extraction.main_keyword_extraction(processed_files)
         print("Lexora is ready to use")
         

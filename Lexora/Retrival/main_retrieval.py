@@ -38,7 +38,7 @@ class MainRetrieval:
         keywords = [(ranked_set[i][2] , ranked_set[i][1]) for i in range(len(ranked_set))]
         print(keywords)
         files = {}
-        for i in tqdm(range(len(ranked_set))):
+        for i in tqdm(range(1)):
             for j in range(len(keyword_faiss)):
                 index_path = os.path.join(database_dir, keyword_faiss[j])
                 metadata_path = os.path.join(database_dir, keyword_metadata[j])
@@ -46,17 +46,19 @@ class MainRetrieval:
                 with open(metadata_path, "rb") as f:
                     metadata = pickle.load(f)
                 keyword_embedding = np.array(ranked_set[i][0], dtype="float32").reshape(1, -1)
+                faiss.normalize_L2(keyword_embedding)
                 D, I = index.search(keyword_embedding, 1)
                 keyword_score = ranked_set[i][1]
                 file_score = metadata[I[0][0]][0]
                 distance = D[0][0]
-                score = keyword_score + file_score - distance
+                score = keyword_score + file_score  + distance
                 file_path = metadata[I[0][0]][2]
                 if file_path in files and files[file_path] < score:
                     files[file_path] = score
                 else:
                     files[file_path] = score
         files = {k: v for k, v in sorted(files.items(), key=lambda item: item[1], reverse=True)}
+        print(files)
         file_paths = list(files.keys())
         if intent == 'retrieve file':
             return file_paths[:5]

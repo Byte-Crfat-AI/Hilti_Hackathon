@@ -21,6 +21,6 @@ import faiss
 #     else:
 #         print("ok")
 
-with open('D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Embeddings\metadata_Cu Co Fe_Consolidation of diamond tools using Cu Co Fe alloy as binders.pkl', "rb") as f:
+with open('D:\Hilti_Hackathon\Hilti_Hackathon\Lexora\Database\Keywords\metadata_Others_Diamond tools - Wear.pkl', "rb") as f:
     metadata_content = pickle.load(f)
 print(metadata_content)
