@@ -1,6 +1,6 @@
 # **Lexora**
 
-![Lexora Logo](Hilti_Hackathon/Lexora/lexora-ui/public/lexora.png)
+![Lexora Logo](Lexora/lexora-ui/public/lexora.png)
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/Byte-Crfat-AI/Hilti_Hackathon/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
