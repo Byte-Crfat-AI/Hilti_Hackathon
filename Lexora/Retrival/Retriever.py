@@ -30,6 +30,13 @@ class FaissSearcher:
         # Add debug counters
         self.vectors_per_file = []
         self.chunks_per_file = []
+    def cleanup(self):
+        """Reset the indices and chunks to free up memory."""
+        self.combined_index = None
+        self.all_chunks = []
+        self.dimension = None
+        self.vectors_per_file = []
+        self.chunks_per_file = []
     
     def encode_text(self, text):
         """Encode text using BERT model"""
@@ -148,3 +155,7 @@ class FaissSearcher:
                 
         except Exception as e:
             print(f"Error occurred: {str(e)}")
+            
+        finally:
+            # Cleanup
+            self.cleanup()

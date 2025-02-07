@@ -73,6 +73,6 @@ class MainRetrieval:
                 modified_path = match_pattern(file_paths[i])
                 faiss_files.append(os.path.join(embedding_database_dir, f"Embedding_index_{modified_path}.faiss"))
                 chunk_files.append(os.path.join(embedding_database_dir, f"metadata_{modified_path}.pkl"))
-            response = await self.RAG.respond(query, faiss_files, chunk_files)
+            response = await self.RAG.respond(query, faiss_files[:5], chunk_files[:5])
             return response
     

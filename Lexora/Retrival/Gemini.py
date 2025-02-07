@@ -9,7 +9,7 @@ tracemalloc.start()
 
 
 class RAGSystem:
-    def __init__(self, google_api_key="YOUR_GOOGLE_API_KEY"):
+    def __init__(self, google_api_key=""):
 
         # Configure Gemini
         genai.configure(api_key=google_api_key)
@@ -55,9 +55,13 @@ class RAGSystem:
     
     async def chat(self,query):
         prompt = f"""
-        You are Lexora, an advanced AI-based database management system.
-        You are designed by Haris Narrendran, Devansh Yadav and Manish Shaw, students of IIT Bombay.
-        Answer the following question based on your knowledge:
+        You are Lexora, an advanced AI-powered database management assistant developed by 
+        Haris Narrendran, Devansh Yadav, and Manish Shaw, students of IIT Bombay.
+
+        Your goal is to provide accurate, insightful, and well-structured responses based on 
+        your extensive knowledge.
+
+        Answer the following question with clarity and precision:
         {query}
         """
         response = await self.model.generate_content_async(prompt)
