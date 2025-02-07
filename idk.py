@@ -1,3 +1,4 @@
+import torch
 import faiss
 import torch
 import numpy as np
@@ -8,7 +9,7 @@ from sentence_transformers import CrossEncoder
 import os
 import time
 
-class FaissSearcher:
+class MC():
     def __init__(self, 
                  tokenizer_name = "NeuML/pubmedbert-base-embeddings"
                  ,model_name = "NeuML/pubmedbert-base-embeddings",
@@ -31,25 +32,6 @@ class FaissSearcher:
         # Add debug counters
         self.vectors_per_file = []
         self.chunks_per_file = []
-
-    def cleanup(self):
-        """Reset the indices and chunks to free up memory."""
-        self.combined_index = None
-        self.all_chunks = []
-        self.dimension = None
-        self.vectors_per_file = []
-        self.chunks_per_file = []
-    
-    def encode_text(self, text):
-        """Encode text using BERT model"""
-        with torch.no_grad():
-            inputs = self.tokenizer(text, return_tensors="pt", 
-                                  padding=True, truncation=True, 
-                                  max_length=512).to(self.device)
-            outputs = self.encoder(**inputs)
-            embeddings = outputs.last_hidden_state[:, 0, :].cpu().numpy()
-        return embeddings
-    
     def load_faiss_files(self, faiss_files, chunks_files):
         """Load and combine multiple FAISS indices and their corresponding chunks from pickle files"""
         if len(faiss_files) != len(chunks_files):
@@ -101,66 +83,28 @@ class FaissSearcher:
         # Verify that number of vectors matches number of chunks
         if self.combined_index.ntotal != len(self.all_chunks):
             raise ValueError(f"Mismatch between number of vectors ({self.combined_index.ntotal}) "
-                           f"and number of chunks ({len(self.all_chunks)}). "
-                           f"Please check that your FAISS indices and chunk files correspond correctly.")
-    
-    def search(self, query, k = 5, rerank_k = 20):
-        """
-        Perform similarity search and reranking
-        """
-        # Encode query
-        query_vector = self.encode_text(query)
-        
-        # Perform initial search with larger k for reranking
-        distances, indices = self.combined_index.search(query_vector, rerank_k)
-        
-        # Prepare candidates for reranking
-        candidates = [(self.all_chunks[idx], score) for idx, score in zip(indices[0], distances[0])]
-        
-        # Prepare pairs for reranking
-        rerank_pairs = [[query, chunk] for chunk, _ in candidates]
-        
-        # Rerank using cross-encoder
-        rerank_scores = self.reranker.predict(rerank_pairs)
-        
-        # Sort by reranker scores
-        reranked_results = sorted(zip(candidates, rerank_scores), 
-                                key=lambda x: x[1], reverse=True)[:k]
-        
-        # Format results
-        results = []
-        for (chunk, faiss_score), rerank_score in reranked_results:
-            results.append({
-                'chunk': chunk,
-                'faiss_score': float(faiss_score),
-                'rerank_score': float(rerank_score)
-            })
-            
-        return results
+                            f"and number of chunks ({len(self.all_chunks)}). "
+                            f"Please check that your FAISS indices and chunk files correspond correctly.")
 
-    def return_chunks(self,query,faiss_files,chunks_files):
 
-        # Initialize searcher
-        chunks=[]
-        start_time=time.time()
+import os
 
-        try:
-            # Load indices and chunks
-            self.load_faiss_files(faiss_files, chunks_files)
-            
-            # Perform search
-            results = self.search(query, k=5)
-            
-            # Print results
-            for idx, result in enumerate(results, 1):
-                chunks.append(result['chunk'])
-            end_time=time.time()
-            print('Time to retrieve chunks :',end_time-start_time)
-            return chunks
-                
-        except Exception as e:
-            print(f"Error occurred: {str(e)}")
-            
-        finally:
-            # Cleanup
-            self.cleanup()
+# Folder path (change it to your folder path)
+folder_path = "/workspace/Hilti_Hackathon/Lexora/Database/Embeddings"
+
+embedding_files = []
+metadata_files = []
+
+# Iterate through all files in the folder
+for file_name in os.listdir(folder_path):
+    if file_name.startswith("Embedding_index_Others"):
+        embedding_files.append(os.path.join("/workspace/Hilti_Hackathon/Lexora/Database/Embeddings",file_name))
+    elif file_name.startswith("metadata_Others"):
+        metadata_files.append(os.path.join("/workspace/Hilti_Hackathon/Lexora/Database/Embeddings",file_name))
+
+# Print the results
+print("Embedding Files:", embedding_files)
+print("Metadata Files:", metadata_files)
+
+mc=MC()
+mc.load_faiss_files(embedding_files,metadata_files)

@@ -1,19 +1,25 @@
-import google.generativeai as genai
-from typing import List, Dict
-import os
-import numpy as np
-from Retriever import FaissSearcher
+import ollama
+from typing import List
 import tracemalloc
+from Retriever import FaissSearcher
+import requests
+import json
+import re
+import time 
+
+# Define the Ollama API endpoint
+OLLAMA_API_URL = "http://localhost:11434/api/generate"
+
+# Model you want to use
+MODEL_NAME = "deepseek-r1"
 
 tracemalloc.start()
 
 
 class RAGSystem:
-    def __init__(self, google_api_key="YOUR_GOOGLE_API_KEY"):
-
-        # Configure Gemini
-        genai.configure(api_key=google_api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-pro')
+    def __init__(self, model_name="deepseek-r1"):
+        # Load the local LLM
+        self.model_name = model_name
         self.searcher = FaissSearcher()
 
     def generate_prompt(self, query, relevant_chunks):
@@ -31,54 +37,58 @@ class RAGSystem:
         
         **Context:**
         {context}
+        
         **Question:**
         {query}
         """
-
         return prompt
 
-    async def get_response(self, relevant_chunks,query):
-        
+    def clean_response(self,text):
+        """Removes <think> and </think> tags from the response."""
+        return re.sub(r"</?think>", "\nthinking\n", text).strip()
+
+    def chat_with_ollama(self,prompt):
+        """Sends a prompt to Ollama and cleans the response."""
+        data = {
+            "model": MODEL_NAME,
+            "prompt": prompt,
+            "stream": False
+        }
+
+        print('Starting Local DeepSeek-r1 (7B)')
+        start_time=time.time()
+
+        response = requests.post(OLLAMA_API_URL, json=data)
+
+        end_time=time.time()
+        print('Time Taken for ollama :',end_time-start_time)
+
+        if response.status_code == 200:
+            result = response.json()
+            cleaned_response = self.clean_response(result.get("response", ""))
+            return cleaned_response
+        else:
+            return "Error: " + response.text
+
+    def get_response(self, relevant_chunks, query):
         # Generate prompt
         prompt = self.generate_prompt(query, relevant_chunks)
         
-        # Get response from Gemini
-        response = await self.model.generate_content_async(prompt)
-        return response.text
-
-    # Example usage
-    async def respond(self,query,faiss_files,chunks_files):
-        text_chunks=self.searcher.return_chunks(query,faiss_files,chunks_files)
-        # Get response
-        response = await self.get_response(text_chunks,query)
+        # Get response from local LLM
+        response = self.chat_with_ollama(prompt)
         return response
-    
-    async def chat(self,query):
+
+    def respond(self, query, faiss_files, chunks_files):
+        text_chunks = self.searcher.return_chunks(query, faiss_files, chunks_files)
+        response = self.get_response(text_chunks, query)
+        return response
+
+    def chat(self, query):
         prompt = f"""
         You are Lexora, an advanced AI-based database management system.
-        You are designed by Haris Narrendran, Devansh Yadav and Manish Shaw, students of IIT Bombay.
+        You are designed by Haris Narrendran, Devansh Yadav, and Manish Shaw, students of IIT Bombay.
         Answer the following question based on your knowledge:
         {query}
         """
-        response = await self.model.generate_content_async(prompt)
-        return response.text
-
-# import asyncio
-
-# async def main():
-#     rag=RAGSystem()
-#     response = await rag.respond(
-#         'Describe the fourth finger on the left hand',
-#         [
-#             'Lexora/Database/Embeddings/Embedding_index_to_file1.faiss',
-#             'Lexora/Database/Embeddings/Embedding_index_to_file2.faiss'
-#         ],
-#         [
-#             'Lexora/Database/Embeddings/metadata_to_file1.pkl',
-#             'Lexora/Database/Embeddings/metadata_to_file2.pkl'
-#         ]
-#     )
-#     return response
-
-# # Run the async function
-# print(asyncio.run(main()))
+        response = self.chat_with_ollama(prompt)
+        return response
