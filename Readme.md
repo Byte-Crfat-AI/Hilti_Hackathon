@@ -58,6 +58,14 @@ Step-by-step instructions to install and set up the project.
    python gradio_ui.py
    ```
 
+
+4. To start using Ollama:
+   ```bash
+   curl -fsSL https://ollama.com/install.sh | sh
+   ollama serve
+   ollama pull deepseek-r1
+   ```
+
 Your local server will be running, and you will be able to use Lexora.
 
 [Download Target Data](https://drive.google.com/file/d/1buLZLJAmGTpsXzANf45K6VBmIOwh8jlj/view?usp=sharing)
